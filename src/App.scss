@@ -28,6 +28,19 @@
   color: #61dafb;
 }
 
+
+.app-container {
+  .header-container {
+    .navbar-nav {
+      .nav-link {
+        &.active {
+          color: #00bfff;
+        }
+      }
+    }
+  }
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -36,3 +49,4 @@
     transform: rotate(360deg);
   }
 }
+
