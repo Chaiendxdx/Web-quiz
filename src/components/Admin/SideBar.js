@@ -8,7 +8,7 @@ import {
   SidebarFooter,
   SidebarContent,
 } from "react-pro-sidebar";
-
+import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { FaGem } from "react-icons/fa";
 
@@ -56,11 +56,15 @@ const SideBar = (props) => {
               suffix={<span className="badge red">Main</span>}
             >
               Dashboard
+              <Link to="/admins" />
             </MenuItem>
           </Menu>
           <Menu iconShape="circle">
             <SubMenu icon={<FaGem />} title="Features">
-              <MenuItem> Quản lý Users</MenuItem>
+              <MenuItem>
+                Quản lý Users
+                <Link to="/admins/manage-users" />
+              </MenuItem>
               <MenuItem> Quản lý bài Quiz</MenuItem>
               <MenuItem> Quản lý câu hỏi</MenuItem>
             </SubMenu>
