@@ -23,7 +23,7 @@ const ModalCreateUser = (props) => {
     password: password,
     username: username,
     role: role,
-    userImage: previewImg,
+    userImage: image,
   };
 
   let isExistEmail = false;
@@ -39,10 +39,18 @@ const ModalCreateUser = (props) => {
     setShow(false);
   };
 
+  function encodeImageFileAsURL(element) {
+    var file = element.files[0];
+    var reader = new FileReader();
+    reader.onloadend = function () {
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(file);
+  }
   const handleUpload = (e) => {
     if (e.target && e.target.files && e.target.files[0]) {
       setPreviewImg(URL.createObjectURL(e.target.files[0]));
-      setImage(e.target.files[0]);
+      setImage(encodeImageFileAsURL(e.target));
     }
   };
 

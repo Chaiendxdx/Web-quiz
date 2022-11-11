@@ -5,16 +5,21 @@ import { useState, useEffect } from "react";
 import TableUser from "./TableUser";
 import ModalUpdateUser from "./ModalUpdateUser";
 import ModalViewUser from "./ModalViewUser";
+import ModalDeleteUser from "./ModalDeleteUser";
+import TableUserPaginate from "./TableUserPaginate";
 const participantApi = "http://localhost:3000/participant";
 let dataUser = [];
 
 const ManageUser = (props) => {
+  // let idView;
   const [showModalCreateUser, setShowModalCreateUser] = useState(false);
   const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
   const [showModalView, setShowModalView] = useState(false);
   const [dataUpdateUser, setDataUpdateUser] = useState({});
+  const [showModalDeleteUser, setShowModalDeleteUser] = useState(false);
   const [listUsers, setListUsers] = useState(dataUser);
-  const [idUser, setIdUser] = useState("");
+  const [idUser, setIdUser] = useState();
+  const [deleteUser, setDeleteUser] = useState({});
   let numberUser = dataUser.length;
   const fetchDataUser = () => {
     fetch(participantApi)
@@ -36,8 +41,14 @@ const ManageUser = (props) => {
   };
 
   const handleView = (user) => {
-    setIdUser(user.id);
     setShowModalView(true);
+    setDataUpdateUser(user);
+    setIdUser(user.id);
+  };
+
+  const handleDeleteUser = (user) => {
+    setShowModalDeleteUser(true);
+    setDeleteUser(user);
   };
   return (
     <div className="manage-user-container">
@@ -56,7 +67,16 @@ const ManageUser = (props) => {
           <TableUser
             listUsers={listUsers}
             handleClickBtnUpdate={handleClickBtnUpdate}
+            handleView={handleView}
+            handleDeleteUser={handleDeleteUser}
           />
+
+          {/* <TableUserPaginate
+            listUsers={listUsers}
+            handleClickBtnUpdate={handleClickBtnUpdate}
+            handleView={handleView}
+            handleDeleteUser={handleDeleteUser}
+          /> */}
         </div>
         <ModalCreateUser
           show={showModalCreateUser}
@@ -72,11 +92,21 @@ const ManageUser = (props) => {
           fetchDataUser={fetchDataUser}
         />
 
-        {/* <ModalViewUser
+        <ModalViewUser
           show={showModalView}
           setShow={setShowModalView}
+          dataUser={dataUpdateUser}
           idUser={idUser}
-        /> */}
+          fetchDataUser={fetchDataUser}
+        />
+
+        <ModalDeleteUser
+          show={showModalDeleteUser}
+          setShow={setShowModalDeleteUser}
+          deleteUser={deleteUser}
+          listUsers={listUsers}
+          setListUsers={setListUsers}
+        />
       </div>
     </div>
   );

@@ -3,12 +3,12 @@ import { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FcPlus } from "react-icons/fc";
+import _ from "lodash";
 
 const participantApi = "http://localhost:3000/participant";
-let user = [];
-const ModalViewUser = (props) => {
-  const { show, setShow, idUser } = props;
 
+const ModalViewUser = (props) => {
+  const { show, setShow, dataUser, idUser, fetchDataUser } = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,51 +17,71 @@ const ModalViewUser = (props) => {
   const [role, setRole] = useState("USER");
   const [image, setImage] = useState("");
   const [previewImg, setPreviewImg] = useState("");
-  const [dataUsers, setDataUsers] = useState([]);
+  const [dataUsers, setDataUsers] = useState({});
 
-  let dataUser = {
-    email: email,
-    password: password,
-    username: username,
-    role: role,
-    userImage: previewImg,
-  };
+  // let dataUser = {
+  //   email: email,
+  //   password: password,
+  //   username: username,
+  //   role: role,
+  //   userImage: image,
+  // };
+
+  useEffect(() => {
+    if (!_.isEmpty(dataUser) && idUser !== undefined) {
+      viewParticipant(idUser);
+      setEmail(dataUser.email);
+      setUsername(dataUser.username);
+      setRole(dataUser.role);
+      setPreviewImg(dataUser.userImage);
+    }
+  }, [dataUser]);
 
   const handleClose = () => {
-    setEmail("");
-    setPassword("");
-    setUsername("");
-    setRole("USER");
-    setImage("");
-    setPreviewImg("");
     setShow(false);
   };
+
+  function encodeImageFileAsURL(element) {
+    var file = element.files[0];
+    var reader = new FileReader();
+    reader.onloadend = function () {
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(file);
+  }
 
   const handleUpload = (e) => {
     if (e.target && e.target.files && e.target.files[0]) {
       setPreviewImg(URL.createObjectURL(e.target.files[0]));
-      setImage(e.target.files[0]);
+      encodeImageFileAsURL(e.target);
     }
   };
 
-  useEffect((idUser) => {
-    viewParticipant();
-    user = dataUsers.find((user) => {
-      return user.id === idUser;
-    });
-    setEmail(user.email);
-    setPassword(user.password);
-    setRole(user.role);
-    setUsername(user.username);
-  }, []);
-
-  function viewParticipant() {
-    fetch(participantApi)
-      .then((response) => response.json())
+  function viewParticipant(id) {
+    const options = {
+      method: "GET",
+      // headers: {
+      //   "Content-Type": "application/json",
+      //   // 'Content-Type': 'application/x-www-form-urlencoded',
+      // },
+    };
+    fetch(participantApi + "/" + id, options)
+      .then((response) => {
+        return response.json();
+      })
       .then((data) => {
         setDataUsers(data);
       });
   }
+
+  // // function viewParticipant() {
+  // //   fetch(participantApi)
+  // //     .then((response) => response.json())
+  // //     .then((data) => {
+  // //       dataUsers = [...data];
+  // //       console.log(dataUsers);
+  // //     });
+  // }
 
   return (
     <>

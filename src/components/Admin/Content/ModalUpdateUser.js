@@ -24,7 +24,7 @@ const ModalUpdateUser = (props) => {
     password: password,
     username: username,
     role: role,
-    userImage: previewImg,
+    userImage: image,
   };
   useEffect(() => {
     if (!_.isEmpty(dataUpdateUser)) {
@@ -32,7 +32,6 @@ const ModalUpdateUser = (props) => {
       setUsername(dataUpdateUser.username);
       setRole(dataUpdateUser.role);
       setPreviewImg(dataUpdateUser.userImage);
-      setImage("");
     }
   }, [dataUpdateUser]);
 
@@ -76,7 +75,6 @@ const ModalUpdateUser = (props) => {
       })
       .then(callback);
   }
-
   const handleSubmitUpdateUser = () => {
     fetch(participantApi)
       .then((response) => response.json())
