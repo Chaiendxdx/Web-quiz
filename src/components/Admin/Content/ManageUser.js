@@ -1,7 +1,7 @@
 import ModalCreateUser from "./ModalCreateUser";
 import "./ManageUser.scss";
 import { FcPlus } from "react-icons/fc";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import TableUser from "./TableUser";
 import ModalUpdateUser from "./ModalUpdateUser";
 import ModalViewUser from "./ModalViewUser";
@@ -34,22 +34,22 @@ const ManageUser = (props) => {
     fetchDataUser();
   }, [numberUser]);
 
-  const handleClickBtnUpdate = (userUpdate) => {
+  const handleClickBtnUpdate = useCallback((userUpdate) => {
     setShowModalUpdateUser(true);
     setDataUpdateUser(userUpdate);
     setIdUser(userUpdate.id);
-  };
+  }, []);
 
-  const handleView = (user) => {
+  const handleView = useCallback((user) => {
     setShowModalView(true);
     setDataUpdateUser(user);
     setIdUser(user.id);
-  };
+  }, []);
 
-  const handleDeleteUser = (user) => {
+  const handleDeleteUser = useCallback((user) => {
     setShowModalDeleteUser(true);
     setDeleteUser(user);
-  };
+  }, []);
   return (
     <div className="manage-user-container">
       <div className="title">Manage User</div>
@@ -64,19 +64,19 @@ const ManageUser = (props) => {
         </div>
 
         <div className="table-user-container">
-          <TableUser
-            listUsers={listUsers}
-            handleClickBtnUpdate={handleClickBtnUpdate}
-            handleView={handleView}
-            handleDeleteUser={handleDeleteUser}
-          />
-
-          {/* <TableUserPaginate
+          {/* <TableUser
             listUsers={listUsers}
             handleClickBtnUpdate={handleClickBtnUpdate}
             handleView={handleView}
             handleDeleteUser={handleDeleteUser}
           /> */}
+
+          <TableUserPaginate
+            listUsers={listUsers}
+            handleClickBtnUpdate={handleClickBtnUpdate}
+            handleView={handleView}
+            handleDeleteUser={handleDeleteUser}
+          />
         </div>
         <ModalCreateUser
           show={showModalCreateUser}

@@ -9,6 +9,7 @@ const HomePage = (props) => {
 
       <div className="homepage-content">
         <div className="heading">There's a better way to ask</div>
+
         <div className="content">
           You don't want to make a boring form. And your audience won't answer
           one. Create a typeform instead — and make everyone happy.

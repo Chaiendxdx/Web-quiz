@@ -1,5 +1,7 @@
+import { memo } from "react";
 const TableUser = (props) => {
   const { listUsers } = props;
+
   return (
     <>
       <table className="table table-hover table-bordered">
@@ -15,10 +17,10 @@ const TableUser = (props) => {
         <tbody>
           {listUsers &&
             listUsers.length > 0 &&
-            listUsers.reverse().map((user, index) => {
+            listUsers.map((user, index) => {
               return (
                 <tr key={`table-users-${index}`}>
-                  <th scope="row">{user.id}</th>
+                  <th scope="row">{index + 1}</th>
                   <td>{user.username}</td>
                   <td>{user.email}</td>
                   <td>{user.role}</td>
@@ -57,4 +59,4 @@ const TableUser = (props) => {
   );
 };
 
-export default TableUser;
+export default memo(TableUser);

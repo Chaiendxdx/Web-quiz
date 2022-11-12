@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, memo } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FcPlus } from "react-icons/fc";
@@ -179,4 +179,4 @@ const ModalViewUser = (props) => {
   );
 };
 
-export default ModalViewUser;
+export default memo(ModalViewUser);
