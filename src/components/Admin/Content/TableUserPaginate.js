@@ -18,7 +18,6 @@ const TableUserPaginate = (props) => {
     fetch(participantApi + "?_start=" + start + "&_limit=" + usersPerPage)
       .then((response) => response.json())
       .then((data) => {
-        console.log("data", data);
         if (data.length === 0) {
           setPageCount(pageCount - 1);
           setPageNumber(pageNumber - 1);
@@ -28,11 +27,6 @@ const TableUserPaginate = (props) => {
             setPageCount(Math.ceil(listUsers.length / usersPerPage));
         }
       });
-
-    console.log("pageCount:", pageCount);
-    console.log("PageNumber:", pageNumber);
-    console.log("CurrentListUsers", currentListUsers);
-    console.log("ListUsers: ", listUsers);
   }, [listUsers, start]);
 
   const displayUsers = currentListUsers.map((user, index) => {
