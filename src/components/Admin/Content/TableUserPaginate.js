@@ -5,7 +5,6 @@ const participantApi = "http://localhost:3000/participant";
 
 const TableUserPaginate = (props) => {
   const { listUsers, usersPerPage } = props;
-  console.log(listUsers);
   const [pageNumber, setPageNumber] = useState(0);
   const pagesVisited = pageNumber * usersPerPage;
   const [pageCount, setPageCount] = useState(0);
@@ -19,16 +18,27 @@ const TableUserPaginate = (props) => {
     fetch(participantApi + "?_start=" + start + "&_limit=" + usersPerPage)
       .then((response) => response.json())
       .then((data) => {
-        setcurrentListUsers(data);
-        listUsers.length !== 0 &&
-          setPageCount(Math.ceil(listUsers.length / usersPerPage));
+        console.log("data", data);
+        if (data.length === 0) {
+          setPageCount(pageCount - 1);
+          setPageNumber(pageNumber - 1);
+        } else {
+          setcurrentListUsers(data);
+          listUsers.length !== 0 &&
+            setPageCount(Math.ceil(listUsers.length / usersPerPage));
+        }
       });
+
+    console.log("pageCount:", pageCount);
+    console.log("PageNumber:", pageNumber);
+    console.log("CurrentListUsers", currentListUsers);
+    console.log("ListUsers: ", listUsers);
   }, [listUsers, start]);
 
   const displayUsers = currentListUsers.map((user, index) => {
     return (
       <tr key={`table-users-${index}`}>
-        <th scope="row">{index + 1}</th>
+        <th scope="row">{index + 1 + pageNumber * usersPerPage}</th>
         <td>{user.username}</td>
         <td>{user.email}</td>
         <td>{user.role}</td>
@@ -60,8 +70,7 @@ const TableUserPaginate = (props) => {
   const changePage = ({ selected }) => {
     setPageNumber(selected);
   };
-  console.log("listUsers length:", listUsers.length);
-  console.log("pageCount:", pageCount);
+
   return (
     <>
       <table className="table table-hover table-bordered">
@@ -97,6 +106,7 @@ const TableUserPaginate = (props) => {
           containerClassName="pagination"
           activeClassName="active"
           renderOnZeroPageCount={null}
+          forcePage={pageNumber}
         />
       </div>
     </>
