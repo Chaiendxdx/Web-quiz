@@ -4,52 +4,64 @@ import ReactPaginate from "react-paginate";
 const participantApi = "http://localhost:3000/participant";
 
 const TableUserPaginate = (props) => {
-  const { listUsers } = props;
-
-  // const [users, setUsers] = useState(listUsers); // <- your data
-
+  const { listUsers, usersPerPage } = props;
+  console.log(listUsers);
   const [pageNumber, setPageNumber] = useState(0);
-  const usersPerPage = 5;
   const pagesVisited = pageNumber * usersPerPage;
-  const pageCount = Math.ceil(listUsers.length / usersPerPage);
-  const displayUsers = listUsers
-    .slice(pagesVisited, pagesVisited + usersPerPage)
-    .map((user, index) => {
-      return (
-        <tr key={`table-users-${index}`}>
-          <th scope="row">{index + 1}</th>
-          <td>{user.username}</td>
-          <td>{user.email}</td>
-          <td>{user.role}</td>
-          <td>
-            <button
-              className="btn btn-secondary"
-              onClick={() => props.handleView(user)}
-            >
-              View
-            </button>
-            <button
-              className="btn btn-warning mx-3"
-              onClick={() => props.handleClickBtnUpdate(user)}
-            >
-              Update
-            </button>
-            <button
-              className="btn btn-danger"
-              onClick={() => props.handleDeleteUser(user)}
-            >
-              {" "}
-              Delete
-            </button>
-          </td>
-        </tr>
-      );
-    });
+  const [pageCount, setPageCount] = useState(0);
+  const start = pagesVisited;
+  const end = pagesVisited + usersPerPage;
+  const [currentListUsers, setcurrentListUsers] = useState(
+    listUsers.slice(start, end)
+  );
+
+  useEffect(() => {
+    fetch(participantApi + "?_start=" + start + "&_limit=" + usersPerPage)
+      .then((response) => response.json())
+      .then((data) => {
+        setcurrentListUsers(data);
+        listUsers.length !== 0 &&
+          setPageCount(Math.ceil(listUsers.length / usersPerPage));
+      });
+  }, [listUsers, start]);
+
+  const displayUsers = currentListUsers.map((user, index) => {
+    return (
+      <tr key={`table-users-${index}`}>
+        <th scope="row">{index + 1}</th>
+        <td>{user.username}</td>
+        <td>{user.email}</td>
+        <td>{user.role}</td>
+        <td>
+          <button
+            className="btn btn-secondary"
+            onClick={() => props.handleView(user)}
+          >
+            View
+          </button>
+          <button
+            className="btn btn-warning mx-3"
+            onClick={() => props.handleClickBtnUpdate(user)}
+          >
+            Update
+          </button>
+          <button
+            className="btn btn-danger"
+            onClick={() => props.handleDeleteUser(user)}
+          >
+            {" "}
+            Delete
+          </button>
+        </td>
+      </tr>
+    );
+  });
 
   const changePage = ({ selected }) => {
     setPageNumber(selected);
   };
-
+  console.log("listUsers length:", listUsers.length);
+  console.log("pageCount:", pageCount);
   return (
     <>
       <table className="table table-hover table-bordered">
@@ -64,13 +76,15 @@ const TableUserPaginate = (props) => {
         </thead>
         <tbody>{displayUsers}</tbody>
       </table>
+      {/* {console.log(pageNumber)} */}
       <div className="page-paginate d-flex justify-content-center">
         <ReactPaginate
           previousLabel={"< Previous"}
           nextLabel={"Next >"}
-          pageCount={[pageCount]}
+          pageCount={pageCount}
           onPageChange={changePage}
           pageRangeDisplayed={5}
+          marginPagesDisplayed={3}
           pageClassName="page-item"
           pageLinkClassName="page-link"
           previousClassName="page-item"

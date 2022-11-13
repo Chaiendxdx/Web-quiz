@@ -1,4 +1,5 @@
 import React, { useState, memo } from "react";
+import { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
@@ -9,7 +10,6 @@ const ModalDeleteUser = (props) => {
   const { show, setShow, deleteUser, listUsers, setListUsers } = props;
   const handleClose = () => setShow(false);
   //   const handleShow = () => setShow(true);
-
   const handleDeleteUser = (id, callback) => {
     const options = {
       method: "Delete",

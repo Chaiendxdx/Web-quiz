@@ -73,6 +73,7 @@ const ManageUser = (props) => {
 
           <TableUserPaginate
             listUsers={listUsers}
+            usersPerPage={+5}
             handleClickBtnUpdate={handleClickBtnUpdate}
             handleView={handleView}
             handleDeleteUser={handleDeleteUser}

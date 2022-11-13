@@ -118,6 +118,7 @@ const ModalViewUser = (props) => {
                 className="form-control"
                 disabled
                 value={password}
+                autoComplete="on"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>

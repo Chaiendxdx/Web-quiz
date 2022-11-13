@@ -168,6 +168,7 @@ const ModalCreateUser = (props) => {
                 type="password"
                 className="form-control"
                 value={password}
+                autoComplete="on"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
