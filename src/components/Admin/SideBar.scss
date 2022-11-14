@@ -34,3 +34,21 @@
       padding: 0;
     }
   }
+
+.quiz-web-link {
+    display: inline-block;
+    text-decoration: none;
+    color: #eeecec; 
+    
+  
+}
+
+.quiz-web-link:hover {
+  
+    span {
+      
+      color: #eeecec; 
+    opacity: 0.6;
+    }
+  
+}

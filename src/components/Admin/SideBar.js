@@ -28,25 +28,27 @@ const SideBar = (props) => {
         onToggle={handleToggleSidebar}
       >
         <SidebarHeader>
-          <div
-            style={{
-              padding: "24px",
-              textTransform: "uppercase",
-              fontWeight: "bold",
-              fontSize: 14,
-              letterSpacing: "1px",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            <SiReactivex
-              size={"3em"}
-              color={"#00bfff"}
-              style={{ margin: "0 15px 0 0" }}
-            />
-            <span>Quiz web</span>
-          </div>
+          <a className="quiz-web-link" href="/" target="_parent">
+            <div
+              style={{
+                padding: "24px",
+                textTransform: "uppercase",
+                fontWeight: "bold",
+                fontSize: 14,
+                letterSpacing: "1px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <SiReactivex
+                size={"3em"}
+                color={"#00bfff"}
+                style={{ margin: "0 15px 0 0" }}
+              />
+              <span>Quiz Web</span>
+            </div>
+          </a>
         </SidebarHeader>
 
         <SidebarContent>
@@ -62,11 +64,11 @@ const SideBar = (props) => {
           <Menu iconShape="circle">
             <SubMenu icon={<FaGem />} title="Features">
               <MenuItem>
-                Quản lý Users
+                Manage Users
                 <Link to="/admins/manage-users" />
               </MenuItem>
-              <MenuItem> Quản lý bài Quiz</MenuItem>
-              <MenuItem> Quản lý câu hỏi</MenuItem>
+              <MenuItem> Manage Quiz</MenuItem>
+              <MenuItem> Manage Question</MenuItem>
             </SubMenu>
           </Menu>
         </SidebarContent>
