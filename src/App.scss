@@ -3,9 +3,13 @@
   margin: 0;
   box-sizing: border-box;
 }
+body {
+  overflow: hidden;
+}
 
 .App {
   text-align: center;
+  
 }
 
 .App-header {
@@ -39,7 +43,6 @@
     .btn {
       border-radius: 5px;
       margin-right: 15px;
-      padding: 0 20px;
       border: 1px solid #333;
 
       &:hover {
@@ -118,7 +121,7 @@
 video {
   position:fixed;
   width: 100vw;
-  top: -36px;
+  top: -80px;
 }
 
 

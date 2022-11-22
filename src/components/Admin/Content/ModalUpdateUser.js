@@ -6,12 +6,12 @@ import { FcPlus } from "react-icons/fc";
 import { toast } from "react-toastify";
 import _ from "lodash";
 
-const participantApi = "http://localhost:3000/participant";
+const participantApi = "http://localhost:4000/participant";
 
 const ModalUpdateUser = (props) => {
   const { show, setShow, dataUpdateUser, idUpdateUser } = props;
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [password, setPassword] = useState("");
 
   const [username, setUsername] = useState("");
 
@@ -21,7 +21,7 @@ const ModalUpdateUser = (props) => {
   const [dataUsers, setDataUsers] = useState([]);
   let dataUser = {
     email: email,
-    password: password,
+    // password: password,
     username: username,
     role: role,
     userImage: image,
@@ -121,9 +121,9 @@ const ModalUpdateUser = (props) => {
                 type="password"
                 className="form-control"
                 disabled
-                value={password}
+                // value={password}
                 autoComplete="on"
-                onChange={(e) => setPassword(e.target.value)}
+                // onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 

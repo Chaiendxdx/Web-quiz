@@ -4,40 +4,59 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useLayoutEffect } from "react";
 import { useEffect } from "react";
-const loginApi = "http://localhost:3000/login";
-const participantApi = "http://localhost:3000/participant";
-
+import { VscEye, VscEyeClosed } from "react-icons/vsc";
+import { useDispatch } from "react-redux";
+import { doLogin } from "../../redux/action/userAction";
+import { ImSpinner9 } from "react-icons/im";
+import NProgress from "nprogress";
+const loginApi = "http://localhost:4000/login";
+const participantApi = "http://localhost:4000/participant";
+let dataLogin = [];
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [dataUsers, setDataUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   let isSuccedLogin = useRef(false);
   let data = {
     email: email,
     password: password,
   };
+  const [isVisible, setIsVisible] = useState(false);
+  const toggle = () => {
+    setIsVisible(!isVisible);
+  };
+
+  const fetchData = async () => {
+    const res = await fetch(participantApi);
+    const data = await res.json();
+
+    setDataUsers(data, ...dataUsers);
+  };
 
   useEffect(() => {
-    fetch(participantApi)
-      .then((response) => response.json())
-      .then((data) => setDataUsers(data, ...dataUsers));
-    console.log("listUser after fetch: ", dataUsers);
+    fetchData();
+    // console.log("listUser after fetch: ", dataUsers);
   }, []);
   const navigate = useNavigate();
-  const postLoginData = (loginData, callback) => {
+  const dispatch = useDispatch();
+
+  const postLoginData = async (loginData, callback) => {
     const options = {
       method: "POST",
+      delay: 5000,
       body: JSON.stringify(loginData),
       headers: {
         "Content-Type": "application/json",
         // 'Content-Type': 'application/x-www-form-urlencoded',
+        // Accept: "application/json",
       },
     };
-    fetch(loginApi, options)
-      .then((response) => {
-        response.json();
-      })
-      .then(callback);
+    NProgress.start();
+    const res = await fetch(loginApi, options);
+    const data = await res.json();
+    NProgress.done();
+    callback();
   };
 
   const deleteLoginData = (callback) => {
@@ -49,26 +68,39 @@ const Login = (props) => {
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
     };
-    fetch(loginApi + "/1", options)
-      .then((response) => {
-        response.json();
-      })
-      .then(callback);
+    setTimeout(() => {
+      fetch(loginApi + "/1", options)
+        .then((response) => {
+          return response.json();
+        })
+        .then(callback);
+    }, 3000);
   };
   const handleLogin = () => {
-    console.log("listUsers after login: ", dataUsers);
-    isSuccedLogin = dataUsers.some((user) => {
+    // console.log("listUsers after login: ", dataUsers);
+    // isSuccedLogin = dataUsers.some((user) => {
+    //   return user.email === data.email && user.password === data.password;
+    // });
+    dataLogin = dataUsers.find((user) => {
       return user.email === data.email && user.password === data.password;
     });
-    console.log(isSuccedLogin);
-    if (isSuccedLogin) {
+    setIsLoading(true);
+    if (dataLogin !== undefined && dataLogin.length !== 0) {
+      isSuccedLogin.current = true;
+    }
+    if (isSuccedLogin.current) {
       postLoginData(data, () => {
-        navigate("/");
+        dispatch(doLogin(dataLogin));
         toast.success("Login is success!");
-        deleteLoginData(() => {});
+        setIsLoading(false);
+        navigate("/");
       });
+      localStorage.setItem("account", JSON.stringify(dataLogin));
+      localStorage.setItem("id", JSON.stringify(dataLogin.id));
+      deleteLoginData(() => {});
     } else {
       toast.error("Email or password is incorrect!");
+      setIsLoading(false);
     }
   };
 
@@ -105,18 +137,27 @@ const Login = (props) => {
         <div className="form-group ">
           <label>Password</label>
           <input
-            type={"password"}
+            type={!isVisible ? "password" : "text"}
             className={"form-control"}
             value={password}
+            name="password"
             onChange={(e) => setPassword(e.target.value)}
           />
+          <span className="icon" onClick={toggle}>
+            {isVisible ? <VscEyeClosed /> : <VscEye />}
+          </span>
         </div>
         <a href="/" className="forget-password">
           Forgot password?
         </a>
         <div>
-          <button className="btn btn-submit" onClick={() => handleLogin()}>
-            Login to quiz web
+          <button
+            className="btn btn-submit"
+            disabled={isLoading}
+            onClick={() => handleLogin()}
+          >
+            {isLoading === true && <ImSpinner9 className="loader-icon" />}
+            <span>Login to quiz web</span>
           </button>
         </div>
 

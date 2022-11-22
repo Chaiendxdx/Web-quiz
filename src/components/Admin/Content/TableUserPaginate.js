@@ -1,7 +1,9 @@
 import { useRef } from "react";
+import { memo } from "react";
 import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
-const participantApi = "http://localhost:3000/participant";
+import NProgress from "nprogress";
+const participantApi = "http://localhost:4000/participant";
 
 const TableUserPaginate = (props) => {
   const { listUsers, usersPerPage } = props;
@@ -15,19 +17,26 @@ const TableUserPaginate = (props) => {
   );
 
   useEffect(() => {
-    fetch(participantApi + "?_start=" + start + "&_limit=" + usersPerPage)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.length === 0) {
-          setPageCount(pageCount - 1);
-          setPageNumber(pageNumber - 1);
-        } else {
-          setcurrentListUsers(data);
-          listUsers.length !== 0 &&
-            setPageCount(Math.ceil(listUsers.length / usersPerPage));
-        }
-      });
+    fetchUserPerPage();
   }, [listUsers, start]);
+
+  const fetchUserPerPage = async () => {
+    NProgress.start();
+    const res = await fetch(
+      participantApi + "?_start=" + start + "&_limit=" + usersPerPage
+    );
+    const data = await res.json();
+
+    if (data.length === 0) {
+      setPageCount(pageCount - 1);
+      setPageNumber(pageNumber - 1);
+    } else {
+      setcurrentListUsers(data);
+      listUsers.length !== 0 &&
+        setPageCount(Math.ceil(listUsers.length / usersPerPage));
+    }
+    NProgress.done();
+  };
 
   const displayUsers = currentListUsers.map((user, index) => {
     return (
@@ -107,4 +116,4 @@ const TableUserPaginate = (props) => {
   );
 };
 
-export default TableUserPaginate;
+export default memo(TableUserPaginate);

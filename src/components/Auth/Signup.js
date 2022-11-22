@@ -3,8 +3,9 @@ import "./Signup.scss";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+import { VscEye, VscEyeClosed } from "react-icons/vsc";
 
-const participantApi = "http://localhost:3000/participant";
+const participantApi = "http://localhost:4000/participant";
 const Signup = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,8 +23,13 @@ const Signup = (props) => {
     email,
     password,
     username,
-    role,
+    role: "USER",
     userImage: image,
+  };
+
+  const [isVisible, setIsVisible] = useState(false);
+  const toggle = () => {
+    setIsVisible(!isVisible);
   };
 
   const validateEmail = (email) => {
@@ -60,7 +66,7 @@ const Signup = (props) => {
     fetch(participantApi, options)
       .then((response) => {
         if (response.status === 201) {
-          toast.success("Sign in is success!");
+          toast.success("A new user create is success!");
         } else {
           toast.error("Fail to sign in!");
         }
@@ -149,12 +155,15 @@ const Signup = (props) => {
         <div className="form-group ">
           <label>Password</label>
           <input
-            type={"password"}
+            type={!isVisible ? "password" : "text"}
             className={"form-control"}
             value={password}
+            name="password"
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
+          <span className="icon" onClick={toggle}>
+            {isVisible ? <VscEyeClosed /> : <VscEye />}
+          </span>
         </div>
 
         <div className="form-group ">
@@ -166,19 +175,6 @@ const Signup = (props) => {
             onChange={(e) => setUsername(e.target.value)}
             required
           />
-        </div>
-
-        <div className="form-group ">
-          <label>Role</label>
-          <select
-            className="form-select"
-            onChange={(e) => setRole(e.target.value)}
-          >
-            <option default value="USER">
-              USER
-            </option>
-            <option value="ADMIN">ADMIN</option>
-          </select>
         </div>
 
         <div>

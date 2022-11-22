@@ -8,22 +8,49 @@ import ManageUser from "./components/Admin/Content/ManageUser";
 import DashBoard from "./components/Admin/Content/DashBoard";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
+import ListQuiz from "./components/User/ListQuiz";
+import DetailQuiz from "./components/User/DetailQuiz";
+import ManageQuiz from "./components/Admin/Content/Quiz/ManageQuiz";
+
+const NotFound = () => {
+  return (
+    <div className="page-wrap d-flex flex-row align-items-center">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-md-12 text-center">
+            <span className="display-1 d-block">404</span>
+            <div className="mb-4 lead">
+              The page you are looking for was not found.
+            </div>
+            <a href="/" className="btn btn-link">
+              Back to Home
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 const Layout = (props) => {
   return (
     <>
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
-          <Route path="users" element={<User />} />
+          <Route path="users" element={<ListQuiz />} />
         </Route>
+
+        <Route path="/quiz/:id" element={<DetailQuiz />} />
         <Route path="admins" element={<Admin />}>
           <Route index element={<DashBoard />} />
 
           <Route path="manage-users" element={<ManageUser />} />
+          <Route path="manage-quizzes" element={<ManageQuiz />} />
         </Route>
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       <ToastContainer

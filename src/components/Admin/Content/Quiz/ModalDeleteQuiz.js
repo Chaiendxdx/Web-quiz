@@ -4,13 +4,13 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
 
-const participantApi = "http://localhost:4000/participant";
+const quizApi = "http://localhost:4000/quiz";
 
-const ModalDeleteUser = (props) => {
-  const { show, setShow, deleteUser, listUsers, setListUsers } = props;
+const ModalDeleteQuiz = (props) => {
+  const { show, setShow, deleteQuiz, listQuiz, setListQuiz } = props;
   const handleClose = () => setShow(false);
   //   const handleShow = () => setShow(true);
-  const handleDeleteUser = (id, callback) => {
+  const handleDeleteQuiz = (id, callback) => {
     const options = {
       method: "Delete",
       // body: JSON.stringify(data),
@@ -19,12 +19,12 @@ const ModalDeleteUser = (props) => {
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
     };
-    fetch(participantApi + "/" + id, options)
+    fetch(quizApi + "/" + id, options)
       .then((response) => {
         if (response.status === 200) {
-          toast.success("Delete account succeed!");
+          toast.success("Delete quiz succeed!");
         } else {
-          toast.error("Fail to delete account!");
+          toast.error("Fail to delete quiz!");
         }
         response.json();
       })
@@ -32,20 +32,20 @@ const ModalDeleteUser = (props) => {
   };
 
   const handleSubmitDeleteUser = () => {
-    handleDeleteUser(deleteUser.id, () => {
+    handleDeleteQuiz(deleteQuiz.id, () => {
       setShow(false);
-      setListUsers(listUsers.splice(deleteUser.id, 1));
+      setListQuiz(listQuiz.splice(deleteQuiz.id, 1));
     });
   };
   return (
     <>
       <Modal show={show} onHide={handleClose} backdrop="static">
         <Modal.Header closeButton>
-          <Modal.Title>Delete the user?</Modal.Title>
+          <Modal.Title>Delete the quiz?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure to delete this user? Email:
-          <b>{deleteUser && deleteUser.email ? deleteUser.email : ""}</b>
+          Are you sure to delete this quiz? ID:
+          <b>{deleteQuiz && deleteQuiz.id ? deleteQuiz.id : ""}</b>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
@@ -60,4 +60,4 @@ const ModalDeleteUser = (props) => {
   );
 };
 
-export default memo(ModalDeleteUser);
+export default memo(ModalDeleteQuiz);
