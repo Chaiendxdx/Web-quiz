@@ -8,8 +8,6 @@ import Accordion from "react-bootstrap/Accordion";
 import AccordionBody from "react-bootstrap/esm/AccordionBody";
 import ModalDeleteQuiz from "./ModalDeleteQuiz";
 import ModalEditQuiz from "./ModalEditQuiz";
-import QuizQA from "./QuizQA";
-import AssignQuiz from "./AssignQuiz";
 const quizApi = "http://localhost:4000/quiz";
 let dataQuiz = [];
 const ManageQuiz = (props) => {
@@ -207,17 +205,13 @@ const ManageQuiz = (props) => {
           <Accordion.Header>
             <div className="title">Update Q/A Quiz</div>
           </Accordion.Header>
-          <AccordionBody>
-            <QuizQA />
-          </AccordionBody>
+          <AccordionBody>11111</AccordionBody>
         </Accordion.Item>
         <Accordion.Item eventKey="2">
           <Accordion.Header>
             <div className="title">Assign to Users</div>
           </Accordion.Header>
-          <AccordionBody>
-            <AssignQuiz />
-          </AccordionBody>
+          <AccordionBody>222</AccordionBody>
         </Accordion.Item>
       </Accordion>
 

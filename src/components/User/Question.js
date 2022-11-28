@@ -1,27 +1,51 @@
 import _ from "lodash";
+import { useEffect, useState } from "react";
 const Question = (props) => {
-  const { index, data, handleCheckBox } = props;
-  if (_.isEmpty(data)) {
+  const { index, dataQuestion, dataAnswer, handleCheckBox } = props;
+  const [image, setImage] = useState("");
+  console.log("check dataAnswer: ", dataAnswer);
+  console.log("check dataQuestion: ", dataQuestion);
+  // console.log("image: ", image);
+  // useEffect(() => {
+  //   handleSetImage();
+  // }, [dataQuestion, dataAnswer]);
+
+  // const handleSetImage = async () => {
+  //   await dataQuestion;
+  //   await dataAnswer;
+  //   console.log(1);
+  //   setImage(encodeImageFileAsURL(dataQuestion.questionImage));
+  // };
+
+  if (_.isEmpty(dataQuestion) && _.isEmpty(dataAnswer)) {
     return <></>;
   }
+  // function encodeImageFileAsURL(element) {
+  //   var file = element.files[0];
+  //   var reader = new FileReader();
+  //   reader.onloadend = function () {
+  //     setImage(reader.result);
+  //   };
+  //   reader.readAsDataURL(file);
+  // }
+  // setImage("");
 
   return (
     <>
-      {data.image ? (
+      {dataQuestion.questionImage ? (
         <div className="q-image">
-          <img src={data.image} alt="question" />
+          <img src={dataQuestion.questionImage} alt="question" />
         </div>
       ) : (
         <div className="q-image"></div>
       )}
-
       <div className="question">
-        Question {index + 1}: {data.title} ?
+        Question {index + 1}: {dataQuestion.description} ?
       </div>
       <div className="answer">
-        {data.answers &&
-          data.answers.length &&
-          data.answers.map((a, index) => {
+        {dataAnswer &&
+          dataAnswer.length &&
+          dataAnswer.map((a, index) => {
             return (
               <div key={`answer-${index}`} className="answer-content">
                 <div className="form-check">
@@ -32,7 +56,11 @@ const Question = (props) => {
                     checked={a.isSelected}
                     id={`flexRadioDefault${index}`}
                     onChange={(e) =>
-                      handleCheckBox(e.target.checked, `${data.id}`, `${a.id}`)
+                      handleCheckBox(
+                        e.target.checked,
+                        `${dataAnswer.question_id}`,
+                        `${a.id}`
+                      )
                     }
                   />
                   <label

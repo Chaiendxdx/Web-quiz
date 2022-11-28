@@ -71,6 +71,12 @@ body {
     }
   }
 
+  .main-container {
+    .app-content {
+      height: calc(100vh - 100px);
+    }
+  }
+
   .homepage-container {
     position: absolute;
     top: 0;

@@ -2,7 +2,7 @@ import { useState, useLayoutEffect } from "react";
 import "./ListQuiz.scss";
 import { useNavigate } from "react-router-dom";
 import NProgress from "nprogress";
-const quizApi = "http://localhost:4000/quiz-by-participant";
+const quizApi = "http://localhost:4000/quiz";
 const ListQuiz = (props) => {
   const navigate = useNavigate();
   const [arrQuiz, setArrayQuiz] = useState([]);
@@ -31,11 +31,11 @@ const ListQuiz = (props) => {
             >
               <img
                 className="card-img-top img-thumbnail"
-                src={quiz.image}
+                src={quiz.quizImage}
                 alt="Card cap"
               />
               <div className="card-body">
-                <h5 className="card-title">Quiz {index + 1}</h5>
+                <h5 className="card-title">{quiz.name}</h5>
                 <p className="card-text">{quiz.description}</p>
                 <button
                   className="btn btn-primary"
