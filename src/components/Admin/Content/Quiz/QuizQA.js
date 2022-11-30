@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Select from "react-select";
 import "./QuizQA.scss";
 import { v4 as uuidv4 } from "uuid";
@@ -14,11 +14,15 @@ const quizApi = "http://localhost:4000/quiz";
 const questionApi = "http://localhost:4000/question";
 const answerApi = "http://localhost:4000/answer";
 // const questionApi = "http://localhost:4000/question-by-quiz";
-let listQuestion = [];
+const quizWithQAApi = "http://localhost:4000/quiz-assign-to-user";
+let questionData = [];
+let answerData = [];
 const QuizQA = (props) => {
   const [selectedQuiz, setSelectedQuiz] = useState({});
   const [isValid, setIsValid] = useState();
   const [image, setImage] = useState("");
+  // const [dataWithQA, setDataWithQA] = useState({});
+  const indexImage = useRef(0);
   const initialQuestion = [
     {
       id: uuidv4(),
@@ -46,9 +50,18 @@ const QuizQA = (props) => {
   });
 
   const [listQuiz, setListQuiz] = useState();
+  // console.log("Check selected quiz: ", selectedQuiz);
   useEffect(() => {
+    let questionsClone = _.cloneDeep(questions);
+    questionsClone[indexImage.current].image = image;
+    setQuestions(questionsClone);
     fetchQuiz();
-  }, []);
+  }, [image]);
+  useEffect(() => {
+    if (selectedQuiz && selectedQuiz.value) {
+      fetchQuizWithQA();
+    }
+  }, [selectedQuiz]);
   const fetchQuiz = async () => {
     const options = {
       method: "GET",
@@ -72,10 +85,26 @@ const QuizQA = (props) => {
     }
   };
 
-  const postCreateNewQuestionForQuiz = async (questionData) => {
+  const getQuestion = async (quizId) => {
+    NProgress.start();
+    const res = await fetch(questionApi);
+    const data = await res.json();
+    NProgress.done();
+    return data.filter((question) => question.quiz_id === quizId);
+  };
+
+  const getAnswer = async (quizId) => {
+    NProgress.start();
+    const res = await fetch(answerApi);
+    const data = await res.json();
+    NProgress.done();
+    return data.filter((answer) => answer.quiz_id === quizId);
+  };
+
+  const postUpsertQ = async (dataQ) => {
     const options = {
       method: "POST",
-      body: JSON.stringify(questionData),
+      body: JSON.stringify(dataQ),
       headers: {
         "Content-Type": "application/json",
         // 'Content-Type': 'application/x-www-form-urlencoded',
@@ -88,10 +117,10 @@ const QuizQA = (props) => {
     return data;
   };
 
-  const postCreateNewAnswerForQuestion = async (answerData) => {
+  const postUpsertA = async (dataA) => {
     const options = {
       method: "POST",
-      body: JSON.stringify(answerData),
+      body: JSON.stringify(dataA),
       headers: {
         "Content-Type": "application/json",
         // 'Content-Type': 'application/x-www-form-urlencoded',
@@ -99,15 +128,148 @@ const QuizQA = (props) => {
     };
     NProgress.start();
     const res = await fetch(answerApi, options);
-    // const data = await res.json();
+    const data = await res.json();
     NProgress.done();
-
-    // if (res.status === 201) {
-    //   toast.success("Create new account succeed!");
-    // } else {
-    //   toast.error("Fail to create account!");
-    // }
   };
+
+  const deleteQinQuiz = async (id) => {
+    const options = {
+      method: "Delete",
+      // body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    };
+    const res = await fetch(questionApi + "/" + id, options);
+  };
+  const deleteAinQuiz = async (id) => {
+    const options = {
+      method: "Delete",
+      // body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    };
+    const res = await fetch(answerApi + "/" + id, options);
+  };
+
+  // encode base64 to file
+  function dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(","),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type: mime });
+  }
+  console.log("image: ", image);
+  const fetchQuizWithQA = async () => {
+    questionData = await getQuestion(selectedQuiz.value);
+    answerData = await getAnswer(selectedQuiz.value);
+
+    let questionsClone = [
+      {
+        id: uuidv4(),
+        question_id: "",
+        description: "",
+        imageFile: "",
+        imageName: "",
+        image: image,
+        isInValid: false,
+        answers: [],
+      },
+    ];
+
+    questionData.forEach((question, idQuestion) => {
+      let newQuestion = {
+        id: uuidv4(),
+        question_id: "",
+        description: "",
+        imageFile: "",
+        imageName: "",
+        image: question.questionImage ? image : "",
+        isInValid: false,
+        answers: [],
+      };
+      questionsClone[idQuestion].description = question.description;
+      questionsClone[idQuestion].question_id = question.question_id;
+      if (question.questionImage) {
+        questionsClone[idQuestion].imageFile = dataURLtoFile(
+          question.questionImage,
+          question.questionImageName
+        );
+        questionsClone[idQuestion].imageName = question.questionImageName;
+      }
+      answerData.forEach((answer, idAnswer) => {
+        let newAnswer = {
+          id: uuidv4(),
+          description: "",
+          isCorrect: false,
+          isInValid: false,
+        };
+
+        if (+questionsClone[idQuestion].question_id === +answer.question_id) {
+          questionsClone[idQuestion].answers = [
+            ...questionsClone[idQuestion].answers,
+            newAnswer,
+          ];
+
+          newAnswer.description = answer.description;
+          newAnswer.isCorrect = answer.correct_answer;
+        }
+      });
+      if (idQuestion < questionData.length - 1) {
+        questionsClone = [...questionsClone, newQuestion];
+      }
+    });
+
+    setQuestions(questionsClone);
+  };
+
+  // const postCreateNewQuestionForQuiz = async (questionData) => {
+  //   const options = {
+  //     method: "POST",
+  //     body: JSON.stringify(questionData),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       // 'Content-Type': 'application/x-www-form-urlencoded',
+  //     },
+  //   };
+  //   NProgress.start();
+  //   const res = await fetch(questionApi, options);
+  //   const data = await res.json();
+  //   NProgress.done();
+  //   return data;
+  // };
+
+  // const postCreateNewAnswerForQuestion = async (answerData) => {
+  //   const options = {
+  //     method: "POST",
+  //     body: JSON.stringify(answerData),
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       // 'Content-Type': 'application/x-www-form-urlencoded',
+  //     },
+  //   };
+  //   NProgress.start();
+  //   const res = await fetch(answerApi, options);
+  //   // const data = await res.json();
+  //   NProgress.done();
+
+  //   // if (res.status === 201) {
+  //   //   toast.success("Create new account succeed!");
+  //   // } else {
+  //   //   toast.error("Fail to create account!");
+  //   // }
+  // };
+
   const handleAddRemoveQuestion = (type, id) => {
     if (type === "ADD") {
       const newQuestion = {
@@ -181,18 +343,20 @@ const QuizQA = (props) => {
 
   const handleOnChangeFileQuestion = (questionId, event) => {
     let questionsClone = _.cloneDeep(questions);
-    let index = questionsClone.findIndex((item) => item.id === questionId);
+    indexImage.current = questionsClone.findIndex(
+      (item) => item.id === questionId
+    );
 
     if (
-      index > -1 &&
+      indexImage.current > -1 &&
       event.target &&
       event.target.files &&
       event.target.files[0]
     ) {
+      questionsClone[indexImage.current].image = image;
+      questionsClone[indexImage.current].imageFile = event.target.files[0];
+      questionsClone[indexImage.current].imageName = event.target.files[0].name;
       setImage(encodeImageFileAsURL(event.target));
-      // questionsClone[index].image = image;
-      questionsClone[index].imageFile = event.target.files[0];
-      questionsClone[index].imageName = event.target.files[0].name;
       setQuestions(questionsClone);
     }
   };
@@ -218,7 +382,7 @@ const QuizQA = (props) => {
       setQuestions(questionsClone);
     }
   };
-
+  console.log("questions: ", questions);
   const handleSubmitQuestionForQuiz = async () => {
     //validate data
     if (_.isEmpty(selectedQuiz)) {
@@ -268,52 +432,43 @@ const QuizQA = (props) => {
 
     //submit question
 
-    // await Promise.all(
-    //   questions.map(async (question) => {
-    //     let newQuestion = {
-    //       quiz_id: +selectedQuiz.value,
-    //       description: question.description,
-    //       questionImage: question.imageFile,
-    //     };
-    //     const q = await postCreateNewQuestionForQuiz(newQuestion);
-    //     //submit answer
-    //     await Promise.all(
-    //       question.answers.map(async (answer) => {
-    //         let newAnswer = {
-    //           description: answer.description,
-    //           correct_answer: answer.isCorrect,
-    //           question_id: q.id,
-    //           quiz_id: +selectedQuiz.value,
-    //           isSelected: false,
-    //         };
-    //         console.log("answer: ", answer);
-    //         let a = await postCreateNewAnswerForQuestion(newAnswer);
-    //       })
-    //     );
-    //   })
-    // );
-
-    for (const question of questions) {
-      let newQuestion = {
-        quiz_id: +selectedQuiz.value,
-        description: question.description,
-        questionImage: question.image,
-      };
-      const q = await postCreateNewQuestionForQuiz(newQuestion);
-      for (const answer of question.answers) {
-        let newAnswer = {
-          description: answer.description,
-          correct_answer: answer.isCorrect,
-          question_id: q.id,
-          quiz_id: +selectedQuiz.value,
-          isSelected: false,
-        };
-        await postCreateNewAnswerForQuestion(newAnswer);
+    for (let i = 0; i < questionData.length; i++) {
+      if (questionData[i].quiz_id === +selectedQuiz.value) {
+        await deleteQinQuiz(questionData[i].id);
+      }
+    }
+    for (let i = 0; i < answerData.length; i++) {
+      if (answerData[i].quiz_id === +selectedQuiz.value) {
+        await deleteAinQuiz(answerData[i].id);
       }
     }
 
-    toast.success("Create questions and answers succed!");
+    for (let i = 0; i < questions.length; i++) {
+      let newQuestion = {
+        quiz_id: +selectedQuiz.value,
+        description: questions[i].description,
+        questionImage: questions[i].image,
+        questionImageName: questions[i].imageName,
+        question_id: i + 1,
+      };
+
+      let q = await postUpsertQ(newQuestion);
+      for (const answer of questions[i].answers) {
+        let newAnswer = {
+          description: answer.description,
+          correct_answer: answer.isCorrect,
+          question_id: q.question_id,
+          quiz_id: +selectedQuiz.value,
+          isSelected: false,
+        };
+
+        let a = await postUpsertA(newAnswer);
+      }
+    }
+
+    toast.success("Update questions and answers succed!");
     setQuestions(initialQuestion);
+    setSelectedQuiz({});
   };
   const handlePreviewImage = (questionId) => {
     let questionsClone = _.cloneDeep(questions);

@@ -288,6 +288,7 @@ const Questions = (props) => {
         quiz_id: +selectedQuiz.value,
         description: questions[i].description,
         questionImage: questions[i].image,
+        questionImageName: questions[i].imageName,
         question_id: i + 1,
       };
       let q = await postCreateNewQuestionForQuiz(newQuestion);
