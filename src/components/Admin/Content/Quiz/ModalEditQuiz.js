@@ -77,8 +77,9 @@ const ModalEditQuiz = (props) => {
     NProgress.done();
     callback();
   };
-  const handleSubmitUpdateQuiz = () => {
-    updateQuiz(dataUpdate, idUpdateQuiz, () => {
+
+  const handleSubmitUpdateQuiz = async () => {
+    await updateQuiz(dataUpdate, idUpdateQuiz, () => {
       setDataQuiz((prev) => [...prev, dataUpdate]);
       handleClose();
       props.fetchDataQuiz();

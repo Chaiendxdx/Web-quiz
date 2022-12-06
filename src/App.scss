@@ -7,6 +7,14 @@ body {
   overflow: hidden;
 }
 
+.language {
+  .dropdown-toggle::after {
+  display: none !important;
+}
+  font-size: 18px;
+}
+
+
 .App {
   text-align: center;
   
@@ -39,6 +47,21 @@ body {
     .navbar-brand {
       font-size: 36px;
       font-weight: 700;
+      .brand-icon {
+        font-size: 30px;
+        color: #00bfff;
+        margin: 0 15px 0 0;
+        animation: spin 3s infinite linear;
+      }
+
+      @keyframes spin {
+        from {
+          transform: scale(1) rotate(0deg);
+        }
+        to {
+          transform: scale(1) rotate(360deg);
+        }
+      }
     }
     .btn {
       border-radius: 5px;

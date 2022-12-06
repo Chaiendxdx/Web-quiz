@@ -14,12 +14,14 @@ import { useRef } from "react";
 const quizApi = "http://localhost:4000/quiz";
 const questionApi = "http://localhost:4000/question";
 const answerApi = "http://localhost:4000/answer";
+const resultApi = "http://localhost:4000/result-answers";
 // const questionApi = "http://localhost:4000/question-by-quiz";
 let listQuestion = [];
 const Questions = (props) => {
   const [selectedQuiz, setSelectedQuiz] = useState({});
   const [isValid, setIsValid] = useState();
   const [image, setImage] = useState("");
+
   let indexImage = useRef(0);
   const initialQuestion = [
     {
@@ -73,12 +75,11 @@ const Questions = (props) => {
       setListQuiz(newQuiz);
     }
   };
-  console.log("image: ", image);
+  // console.log("image: ", image);
   useEffect(() => {
     let questionsClone = _.cloneDeep(questions);
     questionsClone[indexImage.current].image = image;
     setQuestions(questionsClone);
-    console.log(1);
   }, [image]);
 
   const postCreateNewQuestionForQuiz = async (questionData) => {
@@ -116,6 +117,28 @@ const Questions = (props) => {
     // } else {
     //   toast.error("Fail to create account!");
     // }
+  };
+
+  const postResultQuiz = async (quizId, answers) => {
+    let dataResult = {
+      quizId,
+      answers: answers,
+    };
+
+    console.log("check dataResult: ", dataResult);
+    const options = {
+      method: "POST",
+      body: JSON.stringify(dataResult),
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    };
+    NProgress.start();
+    const res = await fetch(resultApi, options);
+    const data = await res.json();
+    NProgress.done();
+    return data;
   };
 
   const handleAddRemoveQuestion = (type, id) => {
@@ -233,7 +256,7 @@ const Questions = (props) => {
       setQuestions(questionsClone);
     }
   };
-  console.log("questions: ", questions);
+  // console.log("questions: ", questions);
   const handleSubmitQuestionForQuiz = async () => {
     //validate data
     if (_.isEmpty(selectedQuiz)) {
@@ -282,8 +305,9 @@ const Questions = (props) => {
     }
 
     //submit question
-
+    let answers = [];
     for (let i = 0; i < questions.length; i++) {
+      let resultIdAnswer = [];
       let newQuestion = {
         quiz_id: +selectedQuiz.value,
         description: questions[i].description,
@@ -292,20 +316,32 @@ const Questions = (props) => {
         question_id: i + 1,
       };
       let q = await postCreateNewQuestionForQuiz(newQuestion);
-      for (const answer of questions[i].answers) {
+      for (let j = 0; j < questions[i].answers.length; j++) {
         let newAnswer = {
-          description: answer.description,
-          correct_answer: answer.isCorrect,
+          description: questions[i].answers[j].description,
+          correct_answer: questions[i].answers[j].isCorrect,
           question_id: q.question_id,
           quiz_id: +selectedQuiz.value,
+          answer_id: +(j + 1),
           isSelected: false,
         };
         let a = await postCreateNewAnswerForQuestion(newAnswer);
+        if (questions[i].answers[j].isCorrect) {
+          resultIdAnswer.push(j + 1);
+        }
       }
+      answers.push({
+        questionId: q.question_id,
+        correctAnswer: resultIdAnswer,
+      });
     }
+    let b = await postResultQuiz(+selectedQuiz.value, answers);
 
     toast.success("Create questions and answers succed!");
     setQuestions(initialQuestion);
+
+    // post result
+    // await postResultQuiz()
   };
   const handlePreviewImage = (questionId) => {
     let questionsClone = _.cloneDeep(questions);

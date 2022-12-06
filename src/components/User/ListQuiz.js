@@ -2,11 +2,14 @@ import { useState, useLayoutEffect } from "react";
 import "./ListQuiz.scss";
 import { useNavigate } from "react-router-dom";
 import NProgress from "nprogress";
+import { useTranslation, Trans } from "react-i18next";
 const quizApi = "http://localhost:4000/quiz";
+const quizAssignApi = "http://localhost:4000/quiz-assign-to-user";
 const ListQuiz = (props) => {
   const navigate = useNavigate();
   const [arrQuiz, setArrayQuiz] = useState([]);
-
+  const { t } = useTranslation();
+  let idUser = localStorage.getItem("id");
   const getListQuiz = async () => {
     NProgress.start();
     const res = await fetch(quizApi);
@@ -14,9 +17,40 @@ const ListQuiz = (props) => {
     setArrayQuiz(data);
 
     NProgress.done();
+    return data;
+  };
+  const fetchQuizAssign = async () => {
+    NProgress.start();
+    const res = await fetch(quizAssignApi);
+    const data = await res.json();
+    NProgress.done();
+    return data;
   };
   useLayoutEffect(() => {
-    getListQuiz();
+    const fetchData = async () => {
+      let listQuiz = await getListQuiz();
+      let quizAssign = await fetchQuizAssign();
+      let listIdQuiz = [];
+      let listQuizAssign = [];
+      // console.log("list quiz", listQuiz);
+      // console.log("quiz assign", quizAssign);
+      quizAssign.forEach((item, index) => {
+        if (+item.userId === +idUser) {
+          listIdQuiz = [...listIdQuiz, item.quizId];
+        }
+      });
+      // console.log("listIdQuiz: ", listIdQuiz);
+      listQuiz.forEach((item, index) => {
+        for (let i = 0; i < listIdQuiz.length; i++) {
+          if (+item.id === +listIdQuiz[i]) {
+            listQuizAssign = [...listQuizAssign, item];
+          }
+        }
+      });
+      // console.log("listQuizAssign: ", listQuizAssign);
+      setArrayQuiz(listQuizAssign);
+    };
+    fetchData();
   }, []);
   return (
     <div className="list-quiz-container container">
@@ -45,14 +79,14 @@ const ListQuiz = (props) => {
                     })
                   }
                 >
-                  Start Now!
+                  {t("detailQuiz.start")}
                 </button>
               </div>
             </div>
           );
         })}
       {arrQuiz && arrQuiz.length === 0 && (
-        <div> You don't have any quiz now </div>
+        <div> {t("detailQuiz.description")} </div>
       )}
     </div>
   );

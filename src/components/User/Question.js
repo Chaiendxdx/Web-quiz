@@ -1,46 +1,43 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
+import Lightbox from "react-awesome-lightbox";
+import { useTranslation, Trans } from "react-i18next";
 const Question = (props) => {
   const { index, dataQuestion, dataAnswer, handleCheckBox } = props;
   const [image, setImage] = useState("");
-  console.log("check dataAnswer: ", dataAnswer);
-  console.log("check dataQuestion: ", dataQuestion);
-  // console.log("image: ", image);
-  // useEffect(() => {
-  //   handleSetImage();
-  // }, [dataQuestion, dataAnswer]);
+  const [isPreviewImage, setIsPreviewImage] = useState(false);
+  const { t } = useTranslation();
 
-  // const handleSetImage = async () => {
-  //   await dataQuestion;
-  //   await dataAnswer;
-  //   console.log(1);
-  //   setImage(encodeImageFileAsURL(dataQuestion.questionImage));
-  // };
+  // console.log("check dataAnswer: ", dataAnswer);
+  // console.log("check dataQuestion: ", dataQuestion);
 
   if (_.isEmpty(dataQuestion) && _.isEmpty(dataAnswer)) {
     return <></>;
   }
-  // function encodeImageFileAsURL(element) {
-  //   var file = element.files[0];
-  //   var reader = new FileReader();
-  //   reader.onloadend = function () {
-  //     setImage(reader.result);
-  //   };
-  //   reader.readAsDataURL(file);
-  // }
-  // setImage("");
 
   return (
     <>
       {dataQuestion.questionImage ? (
         <div className="q-image">
-          <img src={dataQuestion.questionImage} alt="question" />
+          <img
+            style={{ cursor: "pointer" }}
+            src={dataQuestion.questionImage}
+            alt="question"
+            onClick={() => setIsPreviewImage(true)}
+          />
+          {isPreviewImage === true && (
+            <Lightbox
+              image={dataQuestion.questionImage}
+              title={dataQuestion.questionImageName}
+              onClose={() => setIsPreviewImage(false)}
+            ></Lightbox>
+          )}
         </div>
       ) : (
         <div className="q-image"></div>
       )}
       <div className="question">
-        Question {index + 1}: {dataQuestion.description} ?
+        {t("detailQuiz.question")} {index + 1}: {dataQuestion.description}
       </div>
       <div className="answer">
         {dataAnswer &&

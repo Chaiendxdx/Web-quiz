@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import TableQuiz from "./TableQuiz";
 import Accordion from "react-bootstrap/Accordion";
 import AccordionBody from "react-bootstrap/esm/AccordionBody";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 import ModalDeleteQuiz from "./ModalDeleteQuiz";
 import ModalEditQuiz from "./ModalEditQuiz";
 import QuizQA from "./QuizQA";
@@ -105,6 +107,7 @@ const ManageQuiz = (props) => {
     console.log("data: ", data);
     return data;
   };
+
   function encodeImageFileAsURL(element) {
     var file = element.files[0];
     var reader = new FileReader();
@@ -132,94 +135,93 @@ const ManageQuiz = (props) => {
 
   return (
     <div className="quiz-container">
-      <Accordion>
-        <Accordion.Item eventKey="0">
-          <Accordion.Header>
-            <div className="title">Manage Quiz</div>
-          </Accordion.Header>
-          <AccordionBody>
-            <div className="add-new">
-              <fieldset className="border rounder-3 p-3">
-                <legend className="float-none w-auto px-3">
-                  Add new Quiz:
-                </legend>
-                <div className="form-floating mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="floatingInput"
-                    placeholder="Your quiz name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                  <label htmlFor="floatingInput">Name</label>
-                </div>
-                <div className="form-floating">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="floatingPassword"
-                    placeholder="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                  <label htmlFor="floatingPassword">Description</label>
-                </div>
-                <div className="my-3">
-                  <Select
-                    value={type}
-                    options={options}
-                    placeholder="Quiz type..."
-                    defaultValue={type}
-                    onChange={setType}
-                  />
-                </div>
-                <div className="more-actions form-group">
-                  <label className="mb-1">Upload Image</label>
-                  <input
-                    type="file"
-                    className="form-control"
-                    onChange={(e) => handleChangeFile(e)}
-                  />
-                </div>
+      <Tabs
+        defaultActiveKey="profile"
+        id="uncontrolled-tab-example"
+        className="mb-2 text-info title"
+        justify
+      >
+        <Tab className="p-3 pt-0 " eventKey="profile" title="Manage Quiz">
+          <Accordion defaultActiveKey="0">
+            <Accordion.Item eventKey="0">
+              <Accordion.Header>Add new Quiz</Accordion.Header>
+              <Accordion.Body>
+                <div className="add-new">
+                  <fieldset className="border rounder-3 p-3">
+                    <legend className="float-none w-auto px-3">
+                      New Quiz:
+                    </legend>
+                    <div className="form-floating mb-3">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="floatingInput"
+                        placeholder="Your quiz name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                      <label htmlFor="floatingInput">Name</label>
+                    </div>
+                    <div className="form-floating">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="floatingPassword"
+                        placeholder="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                      />
+                      <label htmlFor="floatingPassword">Description</label>
+                    </div>
+                    <div className="my-3">
+                      <Select
+                        value={type}
+                        options={options}
+                        placeholder="Quiz type..."
+                        defaultValue={type}
+                        onChange={setType}
+                      />
+                    </div>
+                    <div className="more-actions form-group">
+                      <label className="mb-1">Upload Image</label>
+                      <input
+                        type="file"
+                        className="form-control"
+                        onChange={(e) => handleChangeFile(e)}
+                      />
+                    </div>
 
-                <div className="mt-3">
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => handleSubmitQuiz()}
-                  >
-                    Save
-                  </button>
+                    <div className="mt-3">
+                      <button
+                        className="btn btn-warning"
+                        onClick={() => handleSubmitQuiz()}
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </fieldset>
                 </div>
-              </fieldset>
-            </div>
-            <div className="list-detail">
-              <TableQuiz
-                listQuiz={listQuiz}
-                quizPerPage={+5}
-                handleClickBtnEdit={handleClickBtnEdit}
-                handleDeleteQuiz={handleDeleteQuiz}
-              />
-            </div>
-          </AccordionBody>
-        </Accordion.Item>
-        <Accordion.Item eventKey="1">
-          <Accordion.Header>
-            <div className="title">Update Q/A Quiz</div>
-          </Accordion.Header>
-          <AccordionBody>
-            <QuizQA />
-          </AccordionBody>
-        </Accordion.Item>
-        <Accordion.Item eventKey="2">
-          <Accordion.Header>
-            <div className="title">Assign to Users</div>
-          </Accordion.Header>
-          <AccordionBody>
-            <AssignQuiz />
-          </AccordionBody>
-        </Accordion.Item>
-      </Accordion>
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
+
+          <div className="list-detail">
+            <TableQuiz
+              listQuiz={listQuiz}
+              quizPerPage={+5}
+              handleClickBtnEdit={handleClickBtnEdit}
+              handleDeleteQuiz={handleDeleteQuiz}
+            />
+          </div>
+        </Tab>
+
+        <Tab className="p-3 pt-0 " eventKey="password" title="Update Q/A Quiz">
+          <QuizQA />
+        </Tab>
+        <Tab className="p-3 pt-0 " eventKey="history" title="Assign to Users">
+          <AssignQuiz />
+        </Tab>
+      </Tabs>
 
       <ModalEditQuiz
         show={showModalEditQuiz}

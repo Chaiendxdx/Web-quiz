@@ -13,6 +13,8 @@ import DetailQuiz from "./components/User/DetailQuiz";
 import ManageQuiz from "./components/Admin/Content/Quiz/ManageQuiz";
 import Questions from "./components/Admin/Content/Question/Questions";
 import { useEffect } from "react";
+import React, { Suspense } from "react";
+import PrivateRoute from "./routes/PrivateRoute";
 const NotFound = () => {
   return (
     <div className="page-wrap d-flex flex-row align-items-center">
@@ -34,18 +36,36 @@ const NotFound = () => {
 };
 const Layout = (props) => {
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
   }, []);
   return (
-    <>
+    <Suspense fallback="...is loading">
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
-          <Route path="users" element={<ListQuiz />} />
+          <Route
+            path="users"
+            element={
+              <PrivateRoute>
+                <ListQuiz />
+              </PrivateRoute>
+            }
+          />
         </Route>
 
         <Route path="/quiz/:id" element={<DetailQuiz />} />
-        <Route path="admins" element={<Admin />}>
+        <Route
+          path="admins"
+          element={
+            <PrivateRoute>
+              <Admin />
+            </PrivateRoute>
+          }
+        >
           <Route index element={<DashBoard />} />
 
           <Route path="manage-users" element={<ManageUser />} />
@@ -70,7 +90,7 @@ const Layout = (props) => {
         pauseOnHover
         theme="light"
       />
-    </>
+    </Suspense>
   );
 };
 export default Layout;

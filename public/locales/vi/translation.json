@@ -1,0 +1,37 @@
+{
+   
+          
+        "homepage": {
+          "title1": "Có rất nhiều cách để học",
+          "title2": "Bạn không muốn học 1 cách tẻ nhạt? Và bạn thích làm các bài trắc nghiệm? Cùng bắt đầu với chúng tôi — và khiến bản thân trở nên thông minh hơn nào.",
+          "title3": {
+            "login": "Cùng bắt đầu nào!",
+            "signup": "Làm bài kiểm tra nào!"
+          }
+        },
+        "header": {
+            "home": "Trang chủ",
+            "user": "Người dùng",
+            "admin": "Quản trị viên",
+            "profile": "Thông tin",
+            "login": "Đăng nhập",
+            "logout": "Đăng xuất",
+            "signup":"Đăng ký",
+            "settings": "Cài đặt"
+        },
+        "detailQuiz": {
+            "quiz": "Bài",
+            "prev": "Lùi",
+            "next": "Tiến",
+            "finish": "Hoàn thành",
+            "start": "Bắt đầu nào!",
+            "description": "Bạn không có bài kiểm tra nào bây giờ",
+            "yourResult": "Kết quả bài kiểm tra: ",
+            "totalQuestion": "Tổng câu hỏi:",
+            "totalCorrectAnswer": "Tổng câu trả lời đúng:",
+            "showAnswer": "Hiện đáp án:",
+            "close": "Đóng",
+            "question": "Câu hỏi"
+        }
+      
+}

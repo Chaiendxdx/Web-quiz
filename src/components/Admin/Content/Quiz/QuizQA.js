@@ -14,6 +14,7 @@ const quizApi = "http://localhost:4000/quiz";
 const questionApi = "http://localhost:4000/question";
 const answerApi = "http://localhost:4000/answer";
 // const questionApi = "http://localhost:4000/question-by-quiz";
+const resultApi = "http://localhost:4000/result-answers";
 const quizWithQAApi = "http://localhost:4000/quiz-assign-to-user";
 let questionData = [];
 let answerData = [];
@@ -21,6 +22,7 @@ const QuizQA = (props) => {
   const [selectedQuiz, setSelectedQuiz] = useState({});
   const [isValid, setIsValid] = useState();
   const [image, setImage] = useState("");
+  const [result, setResult] = useState([]);
   // const [dataWithQA, setDataWithQA] = useState({});
   const indexImage = useRef(0);
   const initialQuestion = [
@@ -58,10 +60,16 @@ const QuizQA = (props) => {
     fetchQuiz();
   }, [image]);
   useEffect(() => {
-    if (selectedQuiz && selectedQuiz.value) {
-      fetchQuizWithQA();
-    }
+    const fetchData = async () => {
+      if (selectedQuiz && selectedQuiz.value) {
+        await fetchQuizWithQA();
+        let r = await fetchResult();
+        setResult(r);
+      }
+    };
+    fetchData();
   }, [selectedQuiz]);
+  console.log("result: ", result);
   const fetchQuiz = async () => {
     const options = {
       method: "GET",
@@ -83,6 +91,20 @@ const QuizQA = (props) => {
       });
       setListQuiz(newQuiz);
     }
+  };
+  const fetchResult = async () => {
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    };
+    NProgress.start();
+    const res = await fetch(resultApi, options);
+    const data = await res.json();
+    NProgress.done();
+    return data;
   };
 
   const getQuestion = async (quizId) => {
@@ -155,6 +177,17 @@ const QuizQA = (props) => {
     const res = await fetch(answerApi + "/" + id, options);
   };
 
+  const deleteResultExist = async (id) => {
+    const options = {
+      method: "Delete",
+      // body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    };
+    const res = await fetch(resultApi + "/" + id, options);
+  };
   // encode base64 to file
   function dataURLtoFile(dataurl, filename) {
     var arr = dataurl.split(","),
@@ -169,7 +202,7 @@ const QuizQA = (props) => {
 
     return new File([u8arr], filename, { type: mime });
   }
-  console.log("image: ", image);
+
   const fetchQuizWithQA = async () => {
     questionData = await getQuestion(selectedQuiz.value);
     answerData = await getAnswer(selectedQuiz.value);
@@ -233,42 +266,27 @@ const QuizQA = (props) => {
     setQuestions(questionsClone);
   };
 
-  // const postCreateNewQuestionForQuiz = async (questionData) => {
-  //   const options = {
-  //     method: "POST",
-  //     body: JSON.stringify(questionData),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       // 'Content-Type': 'application/x-www-form-urlencoded',
-  //     },
-  //   };
-  //   NProgress.start();
-  //   const res = await fetch(questionApi, options);
-  //   const data = await res.json();
-  //   NProgress.done();
-  //   return data;
-  // };
+  const postResultQuiz = async (quizId, answers) => {
+    let dataResult = {
+      quizId,
+      answers: answers,
+    };
 
-  // const postCreateNewAnswerForQuestion = async (answerData) => {
-  //   const options = {
-  //     method: "POST",
-  //     body: JSON.stringify(answerData),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       // 'Content-Type': 'application/x-www-form-urlencoded',
-  //     },
-  //   };
-  //   NProgress.start();
-  //   const res = await fetch(answerApi, options);
-  //   // const data = await res.json();
-  //   NProgress.done();
-
-  //   // if (res.status === 201) {
-  //   //   toast.success("Create new account succeed!");
-  //   // } else {
-  //   //   toast.error("Fail to create account!");
-  //   // }
-  // };
+    console.log("check dataResult: ", dataResult);
+    const options = {
+      method: "POST",
+      body: JSON.stringify(dataResult),
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    };
+    NProgress.start();
+    const res = await fetch(resultApi, options);
+    const data = await res.json();
+    NProgress.done();
+    return data;
+  };
 
   const handleAddRemoveQuestion = (type, id) => {
     if (type === "ADD") {
@@ -431,6 +449,8 @@ const QuizQA = (props) => {
     }
 
     //submit question
+    let resultClone = _.cloneDeep(result);
+    let answers = [];
 
     for (let i = 0; i < questionData.length; i++) {
       if (questionData[i].quiz_id === +selectedQuiz.value) {
@@ -443,7 +463,16 @@ const QuizQA = (props) => {
       }
     }
 
+    if (result && result.length > 0) {
+      for (let i = 0; i < resultClone.length; i++) {
+        if (resultClone[i].quizId === +selectedQuiz.value) {
+          await deleteResultExist(resultClone[i].id);
+        }
+      }
+    }
+
     for (let i = 0; i < questions.length; i++) {
+      let resultIdAnswer = [];
       let newQuestion = {
         quiz_id: +selectedQuiz.value,
         description: questions[i].description,
@@ -453,19 +482,26 @@ const QuizQA = (props) => {
       };
 
       let q = await postUpsertQ(newQuestion);
-      for (const answer of questions[i].answers) {
+      for (let j = 0; j < questions[i].answers.length; j++) {
         let newAnswer = {
-          description: answer.description,
-          correct_answer: answer.isCorrect,
+          description: questions[i].answers[j].description,
+          correct_answer: questions[i].answers[j].isCorrect,
           question_id: q.question_id,
           quiz_id: +selectedQuiz.value,
+          answer_id: +(j + 1),
           isSelected: false,
         };
-
+        if (questions[i].answers[j].isCorrect) {
+          resultIdAnswer.push(j + 1);
+        }
         let a = await postUpsertA(newAnswer);
       }
+      answers.push({
+        questionId: q.question_id,
+        correctAnswer: resultIdAnswer,
+      });
     }
-
+    let b = await postResultQuiz(+selectedQuiz.value, answers);
     toast.success("Update questions and answers succed!");
     setQuestions(initialQuestion);
     setSelectedQuiz({});

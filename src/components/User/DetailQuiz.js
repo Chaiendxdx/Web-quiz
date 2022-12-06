@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, NavLink } from "react-router-dom";
 import "./DetailQuiz.scss";
 import Question from "./Question";
 import NProgress from "nprogress";
 import _ from "lodash";
 import ModalResult from "./ModalResult";
+import RightContent from "./Content/RightContent";
+import { useTranslation, Trans } from "react-i18next";
+import Breadcrumb from "react-bootstrap/Breadcrumb";
 const questionApi = "http://localhost:4000/question";
 const answerApi = "http://localhost:4000/answer";
+const resultApi = "http://localhost:4000/result-answers";
 const submitAnswerApi = "http://localhost:4000/submit-answers";
 let listQuestion = [];
 let listAnswer = [];
@@ -17,7 +21,9 @@ const DetailQuiz = (props) => {
   const location = useLocation();
   const [dataQuiz, setDataQuiz] = useState([]);
   const [dataAnswer, setDataAnswer] = useState([]);
+  const [result, setResult] = useState([]);
   // const [answer, setAnswer] = useState(listAnswer);
+  const { t } = useTranslation();
   const [showModalResult, setShowModalResult] = useState(false);
   const [index, setIndex] = useState(0);
   const [dataModalResult, setDataModalResult] = useState({});
@@ -37,13 +43,21 @@ const DetailQuiz = (props) => {
       setDataAnswer(data);
       // setAnswer(listAnswer);
     };
+    const fetchResult = async () => {
+      NProgress.start();
+      const res = await fetch(resultApi);
+      const data = await res.json();
+      NProgress.done();
+      setResult(data);
+    };
     fetchQuestion();
     fetchAnswer();
+    fetchResult();
   }, [quizId]);
 
   let dataQuizClone = _.cloneDeep(dataQuiz);
   let dataAnswerClone = _.cloneDeep(dataAnswer);
-  console.log("dataQuiz: ", dataQuizClone);
+  // console.log("dataQuiz: ", dataQuizClone);
   if (dataQuizClone && dataQuizClone.length > 0) {
     listQuestion = dataQuizClone.filter((question) => {
       return question.quiz_id === +quizId;
@@ -56,8 +70,6 @@ const DetailQuiz = (props) => {
     });
   }
 
-  console.log("data Answer: ", dataAnswer);
-  console.log("index", index);
   const postSubmitQuiz = async (dataSubmit) => {
     const options = {
       method: "POST",
@@ -70,16 +82,45 @@ const DetailQuiz = (props) => {
     NProgress.start();
     const res = await fetch(submitAnswerApi, options);
     const data = await res.json();
+
     NProgress.done();
     if (res.status === 201) {
+      let countCorrect = 0;
+
+      let countQuestion = listQuestion.length;
+      data.answers.forEach((answer) => {
+        result.forEach((item) => {
+          if (item.quizId === data.quizId) {
+            for (let i = 0; i < item.answers.length; i++) {
+              if (
+                _.isEqual(answer.userAnswerId, item.answers[i].correctAnswer) &&
+                answer.questionId === item.answers[i].questionId
+              ) {
+                countCorrect++;
+              }
+            }
+          }
+          console.log("answer: ", answer);
+          console.log("item: ", item);
+        });
+      });
+
       setDataModalResult({
-        //countCorrect:
-        //countTotal:
-        //quizData:
+        countCorrect,
+        countQuestion,
+        countTotal: Math.ceil((countCorrect / listQuestion.length) * 10),
       });
       setShowModalResult(true);
     }
   };
+
+  // const checkTotalCorrect = (answers) => {
+  //   let dataAnswerClone = _.cloneDeep(dataAnswer);
+  //   dataAnswerClone.forEach((answer, index) => {
+  //     if (answer.question_id === index + 1) {
+  //     }
+  //   });
+  // };
 
   const handlePrev = () => {
     if (index - 1 < 0) return;
@@ -94,22 +135,27 @@ const DetailQuiz = (props) => {
   const handleFinish = () => {
     let payload = {
       quizId: +quizId,
+      userId: +localStorage.getItem("id"),
       answers: [],
     };
     let answers = [];
     if (
-      dataQuiz &&
-      dataQuiz.length > 0 &&
+      listQuestion &&
+      listQuestion.length > 0 &&
       dataAnswer &&
       dataAnswer.length > 0
     ) {
-      dataQuiz.forEach((question) => {
-        let questionId = question.id;
+      listQuestion.forEach((question, index) => {
+        let questionId = index + 1;
         let userAnswerId = [];
 
-        dataAnswer.forEach((answer) => {
+        let dataAnswerClone = _.cloneDeep(dataAnswer);
+        let dataAnswerPerQuestion = dataAnswerClone.filter(
+          (item) => item.question_id === questionId
+        );
+        dataAnswerPerQuestion.forEach((answer) => {
           if (answer.isSelected === true) {
-            userAnswerId.push(answer.id);
+            userAnswerId.push(answer.answer_id);
           }
         });
         answers.push({
@@ -118,11 +164,11 @@ const DetailQuiz = (props) => {
         });
       });
       payload.answers = answers;
-      console.log("final payload: ", payload);
+      // console.log("final payload: ", payload);
       postSubmitQuiz({ ...payload });
     }
   };
-
+  // console.log("dataAnswers: ", dataAnswer);
   const handleCheckBox = (e, questionId, answerId) => {
     // let dataQuizClone = _.cloneDeep(dataQuiz);
     // let question = dataQuizClone.find((item) => +item.id === +questionId);
@@ -133,7 +179,7 @@ const DetailQuiz = (props) => {
       let questionAfterCheck = dataAnswer.map((item, index) => {
         if (+item.id === +answerId) {
           item.isSelected = !item.isSelected;
-          console.log("selected: ", item.isSelected);
+          // console.log("selected: ", item.isSelected);
         }
         return item;
       });
@@ -146,21 +192,61 @@ const DetailQuiz = (props) => {
       setDataAnswer(listAnswer);
     }
   };
-  console.log("list Questions: ", listQuestion);
-  console.log("quizId: ", quizId);
+
   return (
-    <div className="detail-quiz-container">
-      <div className="left-content">
-        <div className="title">
-          Quiz {quizId} : {location?.state?.quizTitle}
+    <>
+      <Breadcrumb className="quiz-detail-new-header">
+        <NavLink to="/" className="breadcrumb-item">
+          Home
+        </NavLink>
+        <NavLink to="/users" className="breadcrumb-item">
+          Users
+        </NavLink>
+        <Breadcrumb.Item active>Do Quiz</Breadcrumb.Item>
+      </Breadcrumb>
+      <div className="detail-quiz-container">
+        <div className="left-content">
+          <div className="title">
+            {t("detailQuiz.quiz")} {quizId} : {location?.state?.quizTitle}
+          </div>
+          <hr />
+          <div className="q-body">{/* <img /> */}</div>
+          <div className="q-content">
+            <Question
+              index={index}
+              dataQuestion={
+                listQuestion && listQuestion.length > 0
+                  ? listQuestion[index]
+                  : []
+              }
+              dataAnswer={
+                dataAnswer && dataAnswer.length > 0
+                  ? dataAnswer.filter(
+                      (answer) =>
+                        +answer.question_id === index + 1 &&
+                        +answer.quiz_id === +quizId
+                    )
+                  : []
+              }
+              handleCheckBox={handleCheckBox}
+            />
+          </div>
+          <div className="footer ">
+            <button className="btn btn-secondary" onClick={() => handlePrev()}>
+              {t("detailQuiz.prev")}
+            </button>
+            <button className="btn btn-primary" onClick={() => handleNext()}>
+              {t("detailQuiz.next")}
+            </button>
+            <button className="btn btn-warning" onClick={() => handleFinish()}>
+              {t("detailQuiz.finish")}
+            </button>
+          </div>
         </div>
-        <hr />
-        <div className="q-body">{/* <img /> */}</div>
-        <div className="q-content">
-          <Question
-            index={index}
+        <div className="right-content">
+          <RightContent
             dataQuestion={
-              listQuestion && listQuestion.length > 0 ? listQuestion[index] : []
+              listQuestion && listQuestion.length > 0 ? listQuestion : []
             }
             dataAnswer={
               dataAnswer && dataAnswer.length > 0
@@ -171,28 +257,21 @@ const DetailQuiz = (props) => {
                   )
                 : []
             }
-            handleCheckBox={handleCheckBox}
+            listAnswer={dataAnswer}
+            handleFinish={handleFinish}
+            index={index}
+            setIndex={setIndex}
           />
         </div>
-        <div className="footer ">
-          <button className="btn btn-secondary" onClick={() => handlePrev()}>
-            Prev
-          </button>
-          <button className="btn btn-primary" onClick={() => handleNext()}>
-            Next
-          </button>
-          <button className="btn btn-warning" onClick={() => handleFinish()}>
-            Finish
-          </button>
-        </div>
+        {console.log("dataModalResult: ", dataModalResult)}
+        <ModalResult
+          show={showModalResult}
+          setShow={setShowModalResult}
+          dataModalResult={dataModalResult}
+          quizId={quizId}
+        />
       </div>
-      <div className="right-content">count down</div>
-      <ModalResult
-        show={showModalResult}
-        setShow={setShowModalResult}
-        dataModalResult={dataModalResult}
-      />
-    </div>
+    </>
   );
 };
 

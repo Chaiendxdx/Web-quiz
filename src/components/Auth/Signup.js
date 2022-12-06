@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
+import Language from "../Header/Language";
 
 const participantApi = "http://localhost:4000/participant";
 const Signup = (props) => {
@@ -118,6 +119,11 @@ const Signup = (props) => {
       });
   };
 
+  const handleKeyDown = (e) => {
+    if (e && e.key === "Enter") {
+      handleSignup();
+    }
+  };
   return (
     <div className="login-container">
       <div className="header">
@@ -130,6 +136,7 @@ const Signup = (props) => {
         >
           Log in
         </button>
+        <Language />
       </div>
 
       <div className="title col-4 mx-auto">Quiz Web</div>
@@ -174,6 +181,7 @@ const Signup = (props) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
+            onKeyDown={(e) => handleKeyDown(e)}
           />
         </div>
 

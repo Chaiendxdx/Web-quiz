@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { doLogin } from "../../redux/action/userAction";
 import { ImSpinner9 } from "react-icons/im";
 import NProgress from "nprogress";
+import Language from "../Header/Language";
 const loginApi = "http://localhost:4000/login";
 const participantApi = "http://localhost:4000/participant";
 let dataLogin = [];
@@ -104,6 +105,12 @@ const Login = (props) => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e && e.key === "Enter") {
+      handleLogin();
+    }
+  };
+
   return (
     <div className="login-container">
       <div className="header">
@@ -116,6 +123,7 @@ const Login = (props) => {
         >
           Sign up
         </button>
+        <Language />
       </div>
 
       <div className="title col-4 mx-auto">Quiz Web</div>
@@ -142,6 +150,7 @@ const Login = (props) => {
             value={password}
             name="password"
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e)}
           />
           <span className="icon" onClick={toggle}>
             {isVisible ? <VscEyeClosed /> : <VscEye />}

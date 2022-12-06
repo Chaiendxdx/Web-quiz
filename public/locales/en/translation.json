@@ -1,0 +1,35 @@
+{     
+        "homepage": {
+          "title1": "There's a better way to study",
+          "title2": "You don't want to study boringly? And you like taking quizzes? Let's doing quiz with us — and make you smarter.",
+          "title3": {
+            "login": "Get started - it's free",
+            "signup": "Doing Quiz Now"
+          }
+        },
+        "header": {
+            "home": "Home",
+            "user": "Users",
+            "admin": "Admin",
+            "profile": "Profile",
+            "login": "Log in",
+            "logout": "Log out",
+            "signup":"Sign up",
+            "settings": "Settings"
+        },
+        "detailQuiz": {
+            "quiz": "Quiz",
+            "prev": "Prev",
+            "next": "Next",
+            "finish": "Finish",
+            "start": "Start Now!",
+            "description": "You don't have any quiz now",
+            "yourResult": "Your Result: ",
+            "totalQuestion": "Total Questions:",
+            "totalCorrectAnswer": "Total Correct Answers:",
+            "showAnswer": "Show Answers",
+            "close": "Close",
+            "question": "Question"
+        }
+      
+}

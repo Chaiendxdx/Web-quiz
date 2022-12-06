@@ -1,16 +1,19 @@
-import { FETCH_USER_LOGIN_SUCCESS } from "../action/userAction";
+import {
+  FETCH_USER_LOGIN_SUCCESS,
+  USER_LOGOUT_SUCCESS,
+} from "../action/userAction";
 const INITIAL_STATE = {
   account: {
     username: "",
     userImage: "",
     role: "",
+    email: "",
   },
   isAuthenticated: false,
 };
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case FETCH_USER_LOGIN_SUCCESS:
-      console.log(action);
       return {
         ...state,
         account: {
@@ -18,8 +21,20 @@ const userReducer = (state = INITIAL_STATE, action) => {
           username: action?.payload?.username,
           userImage: action?.payload?.userImage,
           role: action?.payload?.role,
+          email: action?.payload?.email,
         },
         isAuthenticated: true,
+      };
+    case USER_LOGOUT_SUCCESS:
+      return {
+        ...state,
+        account: {
+          username: "",
+          userImage: "",
+          role: "",
+          email: "",
+        },
+        isAuthenticated: false,
       };
     default:
       return state;

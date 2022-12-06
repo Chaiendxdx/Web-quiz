@@ -1,7 +1,7 @@
 .detail-quiz-container {
     display: flex;
     gap: 20px;
-    padding: 50px;
+    padding: 0 50px;
     .left-content {
         border: 2px solid #ccc;
         border-radius: 5px;
@@ -56,5 +56,50 @@
         border: 2px solid #ccc;
         border-radius: 5px;
         padding: 20px;
+        .main-timer {
+            border-bottom: 1px dashed;
+            padding-bottom: 26px;
+            text-align: center;
+            font-weight: 600;
+            padding-top: 20px;
+            font-size: 20px;
+        }
+        .main-question {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 15px;
+            .question {
+                border: 1px solid #878787;
+                height: 34px;
+                width: 34px;
+                border-radius:50%;
+                display: flex;
+                font-size: 20px;
+                justify-content: center;
+                align-self: center;
+                cursor: pointer;
+
+                &:hover {
+                    color: red;
+                }
+
+                &.selected {
+                    background-color: #c6c6c6;
+
+                }
+                &.clicked {
+                    color: red;
+                }
+            }
+        }
+    }
+}
+
+.quiz-detail-new-header {
+    padding: 30px 70px;
+    a {
+        text-decoration: none !important;
+        
     }
 }
