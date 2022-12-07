@@ -1,6 +1,7 @@
 import {
   FETCH_USER_LOGIN_SUCCESS,
   USER_LOGOUT_SUCCESS,
+  UPDATE,
 } from "../action/userAction";
 const INITIAL_STATE = {
   account: {
@@ -35,6 +36,18 @@ const userReducer = (state = INITIAL_STATE, action) => {
           email: "",
         },
         isAuthenticated: false,
+      };
+    case UPDATE:
+      return {
+        ...state,
+        account: {
+          id: action?.payload?.id,
+          username: action?.payload?.username,
+          userImage: action?.payload?.userImage,
+          role: action?.payload?.role,
+          email: action?.payload?.email,
+        },
+        isAuthenticated: true,
       };
     default:
       return state;

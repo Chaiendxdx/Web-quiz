@@ -103,3 +103,14 @@
         
     }
 }
+
+.answer {
+    .incorrect {
+        color: red;
+        font-size: 30px;
+    }
+    .correct {
+        color: green;
+        font-size: 30px;
+    }
+}

@@ -13,8 +13,12 @@ const questionApi = "http://localhost:4000/question";
 const answerApi = "http://localhost:4000/answer";
 const resultApi = "http://localhost:4000/result-answers";
 const submitAnswerApi = "http://localhost:4000/submit-answers";
+const quizApi = "http://localhost:4000/quiz";
+const markApi = "http://localhost:4000/total-mark";
 let listQuestion = [];
 let listAnswer = [];
+let name = "";
+let countCorrect = 0;
 const DetailQuiz = (props) => {
   const params = useParams();
   const quizId = params.id;
@@ -22,6 +26,9 @@ const DetailQuiz = (props) => {
   const [dataQuiz, setDataQuiz] = useState([]);
   const [dataAnswer, setDataAnswer] = useState([]);
   const [result, setResult] = useState([]);
+  const [quizName, setQuizName] = useState("");
+  const [isFinish, setIsFinish] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
   // const [answer, setAnswer] = useState(listAnswer);
   const { t } = useTranslation();
   const [showModalResult, setShowModalResult] = useState(false);
@@ -50,9 +57,23 @@ const DetailQuiz = (props) => {
       NProgress.done();
       setResult(data);
     };
+    const fetchQuiz = async (id) => {
+      NProgress.start();
+      const res = await fetch(quizApi);
+      const data = await res.json();
+      NProgress.done();
+
+      let quiz = data.find((item) => {
+        return +item.id === +id;
+      });
+
+      name = quiz.name;
+      setQuizName(quiz.name);
+    };
     fetchQuestion();
     fetchAnswer();
     fetchResult();
+    fetchQuiz(quizId);
   }, [quizId]);
 
   let dataQuizClone = _.cloneDeep(dataQuiz);
@@ -69,7 +90,7 @@ const DetailQuiz = (props) => {
       return answer.quiz_id === +quizId;
     });
   }
-
+  let countQuestion = listQuestion.length;
   const postSubmitQuiz = async (dataSubmit) => {
     const options = {
       method: "POST",
@@ -85,9 +106,6 @@ const DetailQuiz = (props) => {
 
     NProgress.done();
     if (res.status === 201) {
-      let countCorrect = 0;
-
-      let countQuestion = listQuestion.length;
       data.answers.forEach((answer) => {
         result.forEach((item) => {
           if (item.quizId === data.quizId) {
@@ -100,8 +118,6 @@ const DetailQuiz = (props) => {
               }
             }
           }
-          console.log("answer: ", answer);
-          console.log("item: ", item);
         });
       });
 
@@ -113,14 +129,10 @@ const DetailQuiz = (props) => {
       setShowModalResult(true);
     }
   };
-
-  // const checkTotalCorrect = (answers) => {
-  //   let dataAnswerClone = _.cloneDeep(dataAnswer);
-  //   dataAnswerClone.forEach((answer, index) => {
-  //     if (answer.question_id === index + 1) {
-  //     }
-  //   });
-  // };
+  const handleShowAnswer = () => {
+    setShowAnswer(true);
+    setShowModalResult(false);
+  };
 
   const handlePrev = () => {
     if (index - 1 < 0) return;
@@ -132,7 +144,38 @@ const DetailQuiz = (props) => {
     }
   };
 
-  const handleFinish = () => {
+  const postMark = async (
+    quizId,
+    userId,
+    mark,
+    totalQuestion,
+    totalCorrect,
+    quizName
+  ) => {
+    let dataMark = {
+      quizId: quizId,
+      quizName: quizName,
+      userId,
+      totalQuestion,
+      totalCorrect,
+      mark,
+    };
+    const options = {
+      method: "POST",
+      body: JSON.stringify(dataMark),
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    };
+    NProgress.start();
+    const res = await fetch(markApi, options);
+    const data = await res.json();
+    NProgress.done();
+    return data;
+  };
+
+  const handleFinish = async () => {
     let payload = {
       quizId: +quizId,
       userId: +localStorage.getItem("id"),
@@ -165,7 +208,18 @@ const DetailQuiz = (props) => {
       });
       payload.answers = answers;
       // console.log("final payload: ", payload);
-      postSubmitQuiz({ ...payload });
+      await postSubmitQuiz({ ...payload });
+      console.log("correct: ", countCorrect);
+      console.log("question: ", countQuestion);
+      await postMark(
+        +quizId,
+        +localStorage.getItem("id"),
+        Math.ceil((countCorrect / listQuestion.length) * 10),
+        countQuestion,
+        countCorrect,
+        quizName
+      );
+      setIsFinish(true);
     }
   };
   // console.log("dataAnswers: ", dataAnswer);
@@ -229,6 +283,10 @@ const DetailQuiz = (props) => {
                   : []
               }
               handleCheckBox={handleCheckBox}
+              dataResult={result && result.length > 0 ? result : []}
+              isFinish={isFinish}
+              showAnswer={showAnswer}
+              setShow={setShowModalResult}
             />
           </div>
           <div className="footer ">
@@ -238,7 +296,11 @@ const DetailQuiz = (props) => {
             <button className="btn btn-primary" onClick={() => handleNext()}>
               {t("detailQuiz.next")}
             </button>
-            <button className="btn btn-warning" onClick={() => handleFinish()}>
+            <button
+              className="btn btn-warning"
+              onClick={() => handleFinish()}
+              disabled={isFinish}
+            >
               {t("detailQuiz.finish")}
             </button>
           </div>
@@ -263,12 +325,16 @@ const DetailQuiz = (props) => {
             setIndex={setIndex}
           />
         </div>
-        {console.log("dataModalResult: ", dataModalResult)}
+
         <ModalResult
           show={showModalResult}
           setShow={setShowModalResult}
           dataModalResult={dataModalResult}
           quizId={quizId}
+          quizName={name}
+          isFinish={isFinish}
+          handleShowAnswer={handleShowAnswer}
+          showAnswer={showAnswer}
         />
       </div>
     </>

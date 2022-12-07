@@ -31,7 +31,7 @@ const RightContent = (props) => {
     }
     return "question";
   };
-  console.log(listAnswer);
+
   const handleClickQuestion = (question, index) => {
     setIndex(index);
     if (refDiv.current) {

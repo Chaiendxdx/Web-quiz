@@ -1,6 +1,7 @@
 export const FETCH_USER_LOGIN_SUCCESS = "FETCH_USER_LOGIN_SUCCESS";
 export const USER_LOGOUT_SUCCESS = "USER_LOGOUT_SUCCESS";
 export const RELOAD = "RELOAD";
+export const UPDATE = "UPDATE";
 export const doLogin = (dataLogin) => {
   return {
     type: FETCH_USER_LOGIN_SUCCESS,
@@ -18,5 +19,12 @@ export const reload = (dataLogin) => {
 export const doLogout = () => {
   return {
     type: USER_LOGOUT_SUCCESS,
+  };
+};
+
+export const update = (dataUpdate) => {
+  return {
+    type: UPDATE,
+    payload: dataUpdate,
   };
 };

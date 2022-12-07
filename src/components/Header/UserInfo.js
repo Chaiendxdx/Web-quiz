@@ -1,17 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FcPlus } from "react-icons/fc";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import _ from "lodash";
+import NProgress from "nprogress";
 import Button from "react-bootstrap/Button";
+import { update } from "../../redux/action/userAction";
+const participantApi = "http://localhost:4000/participant";
 const UserInfo = (props) => {
-  let account = useSelector((state) => state.user.account);
+  const { account } = props;
+  const dispatch = useDispatch();
+  // const [dataUsers, setDataUsers] = useState();
+  let dataUsers = {};
   const [image, setImage] = useState(account.userImage);
-  const [previewImg, setPreviewImg] = useState("");
+  const [previewImg, setPreviewImg] = useState(account.userImage);
   const [email, setEmail] = useState(account.email);
   // const [password, setPassword] = useState("");
 
   const [username, setUsername] = useState(account.username);
 
   const [role, setRole] = useState(account.role);
+  let dataUser = {
+    // email: email,
+    // password: password,
+    username: username,
+    // role: role,
+    userImage: image,
+  };
+  // useEffect(() => {
+  //   if (!_.isEmpty(dataUpdateUser)) {
+  //     setEmail(dataUpdateUser.email);
+  //     setUsername(dataUpdateUser.username);
+  //     setRole(dataUpdateUser.role);
+  //     setPreviewImg(dataUpdateUser.userImage);
+  //   }
+  // }, [dataUpdateUser]);
+
+  const updateParticipant = async (dataUser, id) => {
+    const options = {
+      method: "PATCH",
+      body: JSON.stringify(dataUser),
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    };
+    NProgress.start();
+    const res = await fetch(participantApi + "/" + id, options);
+    const data = await res.json();
+    console.log(data);
+    NProgress.done();
+    // setDataUsers(data);
+    dataUsers = { ...data };
+    if (res.status === 200) {
+      toast.success("Update account succeed!");
+    } else {
+      toast.error("Fail to update account!");
+    }
+  };
   function encodeImageFileAsURL(element) {
     var file = element.files[0];
     var reader = new FileReader();
@@ -27,7 +73,10 @@ const UserInfo = (props) => {
       encodeImageFileAsURL(e.target);
     }
   };
-  const handleUpdateUser = () => {};
+  const handleUpdateUser = async (data, id) => {
+    await updateParticipant(data, id);
+    dispatch(update(dataUsers));
+  };
   return (
     <>
       <form className="row g-3 my-3">
@@ -85,7 +134,10 @@ const UserInfo = (props) => {
           )}
         </div>
       </form>
-      <Button variant="warning" onClick={() => handleUpdateUser()}>
+      <Button
+        variant="warning"
+        onClick={() => handleUpdateUser(dataUser, account.id)}
+      >
         Update
       </Button>
     </>
