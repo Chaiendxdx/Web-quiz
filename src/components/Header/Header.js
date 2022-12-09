@@ -12,6 +12,7 @@ import Language from "./Language";
 import { SiReactivex } from "react-icons/si";
 import { useTranslation, Trans } from "react-i18next";
 import Profile from "./Profile";
+
 const Header = () => {
   let account = useSelector((state) => state.user.account);
   let isAuthenticated = useSelector((state) => state.user.isAuthenticated);

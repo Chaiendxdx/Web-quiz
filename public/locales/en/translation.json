@@ -16,6 +16,7 @@
             "logout": "Log out",
             "signup":"Sign up",
             "settings": "Settings"
+
         },
         "detailQuiz": {
             "quiz": "Quiz",
@@ -30,6 +31,187 @@
             "showAnswer": "Show Answers",
             "close": "Close",
             "question": "Question"
+        },
+        "sidebar": {
+          "main": "Main",
+          "dashboard": "Dashboard",
+          "features": "Features",
+          "manageUser": "Manage Users",
+          "manageQuiz" : "Manage Quiz",
+          "manageQuestion": "Manage Question"
+        },
+        "dashboard": {
+          "title": "Analytics DashBoard",
+          "totalUser": "Total Users",
+          "totalQuiz": "Total Quizzes",
+          "totalQuestion": "Total Questions",
+          "totalAnswer": "Total Answers"
+        },
+        "manageUser": {
+          "title" : "Manage User",
+          "add": "Add new users",
+          "view": "View user",
+          "update": "Update a user",
+          "delete": "Delete the user?",
+          "select" : "Select User:"
+        },
+        "tableUser": {
+          "username": "Username",
+          
+          "email": "Email",
+          "role": "Role",
+          "action": "Action",
+          "view": "View",
+          "update": "Update",
+          "delete": "Delete",
+          "prev": "Previous",
+          "next": "Next"
+        },
+        "createUser": {
+          "successCreate": "Create new account succeed!",
+          "errorCreate": "Fail to create account!",
+          "errorEmail": "Invalid email",
+          "errorPassword": "Please fill in the password",
+          "username": "Username",
+          "exists": "is already exists!",
+          "password": "Password",
+          "role": "Role",
+          "user": "USER",
+          "admin": "ADMIN",
+          "uploadFile": "Upload File Image",
+          "previewImage": "Preview Image"
+        },
+        "updateUser": {
+          "successUpdate": "Update account succeed!",
+          "errorUpdate": "Fail to update account!"
+        },
+        "deleteUser": {
+          "successDelete": "Delete account succeed!",
+          "errorDelete": "Fail to delete account!",
+          "confirm": "Are you sure to delete this user? Email:"
+        },
+        "button": {
+          "close": "Close",
+          "save": "Save",
+          "no": "No",
+          "yes": "Yes",
+          "saveQ": "Save Questions",
+          "edit": "Edit",
+          "del": "Delete",
+          "prev": "Previous",
+          "next": "Next",
+          "assign": "Assign",
+          "signup": "Sign up",
+          "update": "Update"
+        },
+        "quiz": {
+          "successCreate": "Create new quiz success!",
+          "errorCreate": "Fail to create new quiz",
+          "errorRequire": "Name/Description is required",
+          "errorDifficulty": "Please select the difficulty!",
+          "title": "Manage Quiz",
+          "add": "Add new Quiz",
+          "newQuiz": "New quiz:",
+          "listQuiz" : "List Quiz:",
+          "name": "Name",
+          "placeholderName": "Your quiz name",
+          "placeholderDesc": "Description",
+          "placeholderType": "Quiz type...",
+          "desc": "Description",
+          "upload": "Upload Image",
+          "uploadfile": "Upload File Image",
+          "preview": "Preview Image",
+          "difficulty": "Difficulty",
+          "easy": "EASY",
+          "medium": "MEDIUM",
+          "hard": "HARD",
+          "type":"Type",
+          "action":"Actions",
+          "updateQA": "Update Q/A Quiz",
+          "quizAssign": "Assign to Users",
+          "doQuiz": "Do Quiz"
+        },
+        "editQuiz": {
+          "successUpdate": "Update quiz succeed!",
+          "errorUpdate": "Fail to update quiz!",
+          "title": "Update a quiz"
+        },
+        "delQuiz" : {
+          "successDelete": "Delete quiz succeed!",
+          "errorDelete": "Fail to delete quiz!",
+          "title": "Delete the quiz?",
+          "confirm": "Are you sure to delete this quiz? ID:"
+
+        },
+        "quizQA": {
+          "errorQ": "Not empty description for Question",
+          "errorA1": "Not empty Answer",
+          "errorA2": "at Question",
+          "success": "Update questions and answers succed!",
+          "select": "Select Quiz:"
+        },
+        "assignQuiz": {
+          "errorAssign": "The quiz already assigned to user",
+          "successAsign": "Assign the quiz to the current user succeed!"
+        },
+        "question": {
+          "add": "Add questions:",
+          "Desc": "Description",
+          "q": "Question",
+          "desc": "'s description",
+          "0file": "0 file is uploaded",
+          "error": "Please choose a Quiz!",
+          "success": "Create questions and answers succed!",
+          "title": "Manage Questions"
+          
+        },
+        "answer": {
+          "a": "Answer"
+        },
+        "history": {
+          "quizName": "Quiz Name",
+          "totalQ": "Total Questions",
+          "totalC": "Total Correct",
+          "mark": "Mark"
+        },
+        "login": {
+          "success": "Login is success!",
+          "error": "Email or password is incorrect!",
+          "header": "Don't have an account yet?",
+          "signup": "Sign up",
+          "title": "Hello, who's this?",
+          "password": "Password",
+          "forgetPassword": "Forgot Password?",
+          "doLogin": "Login to quiz web ",
+          "homepage": "Go to HomePage"
+        },
+        "signup" : {
+          "success": "A new user create is success!",
+          "error": "Fail to sign in!",
+          "errorEmail": "Invalid email",
+          "errorPassword": "Invalid password",
+          "email": "Email",
+          "username": "Username",
+          "isExist": "is already exists!",
+          "header": "Already have an account?",
+          "login": "Log in",
+          "title": "Welcome to quiz web",
+          "desc": "Please create new account to login!"
+        },
+        "password": {
+          "success": "Update password succeed! Please log in again",
+          "error1": "Fail to password account!",
+          "error2": "Password is incorrect. Please try again!",
+          "error3": "Password is not match. Please try again!",
+          "title1": "Current Password",
+          "title2": "New Password",
+          "title3": "Confirm Password"
+        },
+        "profile" : {
+          "title": "Profile"
+        },
+        "userInfo" : {
+          "success": ""
         }
       
 }

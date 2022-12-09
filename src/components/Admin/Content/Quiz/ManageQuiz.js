@@ -12,6 +12,7 @@ import ModalDeleteQuiz from "./ModalDeleteQuiz";
 import ModalEditQuiz from "./ModalEditQuiz";
 import QuizQA from "./QuizQA";
 import AssignQuiz from "./AssignQuiz";
+import { useTranslation } from "react-i18next";
 const quizApi = "http://localhost:4000/quiz";
 let dataQuiz = [];
 const ManageQuiz = (props) => {
@@ -26,6 +27,7 @@ const ManageQuiz = (props) => {
   const [listQuiz, setListQuiz] = useState(dataQuiz);
   const [idQuiz, setIdQuiz] = useState();
   const [deleteQuiz, setDeleteQuiz] = useState({});
+  const { t } = useTranslation();
   let numberQuiz = dataQuiz.length;
   const fetchDataQuiz = () => {
     fetch(quizApi)
@@ -43,15 +45,15 @@ const ManageQuiz = (props) => {
   const options = [
     {
       value: "EASY",
-      label: "EASY",
+      label: t("quiz.easy"),
     },
     {
       value: "MEDIUM",
-      label: "MEDIUM",
+      label: t("quiz.medium"),
     },
     {
       value: "HARD",
-      label: "HARD",
+      label: t("quiz.hard"),
     },
   ];
 
@@ -75,11 +77,11 @@ const ManageQuiz = (props) => {
       quizImage: image,
     };
     if (!name || !description) {
-      toast.error("Name/Description is required");
+      toast.error(t("quiz.errorRequire"));
       return;
     }
     if (!difficulty) {
-      toast.error("Please select the difficulty!");
+      toast.error(t("quiz.errorDifficulty"));
       return;
     }
 
@@ -95,13 +97,13 @@ const ManageQuiz = (props) => {
     const res = await fetch(quizApi, options);
     const data = await res.json();
     if (data && res.status === 201) {
-      toast.success("Create new quiz success!");
+      toast.success(t("quiz.successCreate"));
       setName("");
       setDescription("");
       setType("");
       setImage("");
     } else {
-      toast.error("Fail to create new quiz");
+      toast.error(t("quiz.errorCreate"));
     }
     NProgress.done();
     console.log("data: ", data);
@@ -141,49 +143,49 @@ const ManageQuiz = (props) => {
         className="mb-2 text-info title"
         justify
       >
-        <Tab className="p-3 pt-0 " eventKey="profile" title="Manage Quiz">
+        <Tab className="p-3 pt-0 " eventKey="profile" title={t("quiz.title")}>
           <Accordion defaultActiveKey="0">
             <Accordion.Item eventKey="0">
-              <Accordion.Header>Add new Quiz</Accordion.Header>
+              <Accordion.Header>{t("quiz.add")}</Accordion.Header>
               <Accordion.Body>
                 <div className="add-new">
                   <fieldset className="border rounder-3 p-3">
                     <legend className="float-none w-auto px-3">
-                      New Quiz:
+                      {t("quiz.newQuiz")}
                     </legend>
                     <div className="form-floating mb-3">
                       <input
                         type="text"
                         className="form-control"
                         id="floatingInput"
-                        placeholder="Your quiz name"
+                        placeholder={t("quiz.placeholderName")}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
-                      <label htmlFor="floatingInput">Name</label>
+                      <label htmlFor="floatingInput">{t("quiz.name")}</label>
                     </div>
                     <div className="form-floating">
                       <input
                         type="text"
                         className="form-control"
                         id="floatingPassword"
-                        placeholder="description"
+                        placeholder={t("quiz.placeholderDesc")}
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                       />
-                      <label htmlFor="floatingPassword">Description</label>
+                      <label htmlFor="floatingPassword">{t("quiz.desc")}</label>
                     </div>
                     <div className="my-3">
                       <Select
                         value={type}
                         options={options}
-                        placeholder="Quiz type..."
+                        placeholder={t("quiz.placeholderType")}
                         defaultValue={type}
                         onChange={setType}
                       />
                     </div>
                     <div className="more-actions form-group">
-                      <label className="mb-1">Upload Image</label>
+                      <label className="mb-1">{t("quiz.upload")}</label>
                       <input
                         type="file"
                         className="form-control"
@@ -196,7 +198,7 @@ const ManageQuiz = (props) => {
                         className="btn btn-warning"
                         onClick={() => handleSubmitQuiz()}
                       >
-                        Save
+                        {t("button.save")}
                       </button>
                     </div>
                   </fieldset>
@@ -215,10 +217,18 @@ const ManageQuiz = (props) => {
           </div>
         </Tab>
 
-        <Tab className="p-3 pt-0 " eventKey="password" title="Update Q/A Quiz">
+        <Tab
+          className="p-3 pt-0 "
+          eventKey="password"
+          title={t("quiz.updateQA")}
+        >
           <QuizQA />
         </Tab>
-        <Tab className="p-3 pt-0 " eventKey="history" title="Assign to Users">
+        <Tab
+          className="p-3 pt-0 "
+          eventKey="history"
+          title={t("quiz.quizAssign")}
+        >
           <AssignQuiz />
         </Tab>
       </Tabs>

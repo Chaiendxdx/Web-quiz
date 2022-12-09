@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FcPlus } from "react-icons/fc";
 import { toast } from "react-toastify";
-
+import { useTranslation } from "react-i18next";
 const participantApi = "http://localhost:4000/participant";
 
 const ModalCreateUser = (props) => {
@@ -13,7 +13,7 @@ const ModalCreateUser = (props) => {
   const [password, setPassword] = useState("");
 
   const [username, setUsername] = useState("");
-
+  const { t } = useTranslation();
   const [role, setRole] = useState("USER");
   const [image, setImage] = useState("");
   const [previewImg, setPreviewImg] = useState("");
@@ -88,9 +88,9 @@ const ModalCreateUser = (props) => {
     fetch(participantApi, options)
       .then((response) => {
         if (response.status === 201) {
-          toast.success("Create new account succeed!");
+          toast.success(t("createUser.successCreate"));
         } else {
-          toast.error("Fail to create account!");
+          toast.error(t("createUser.errorCreate"));
         }
         response.json();
       })
@@ -101,13 +101,13 @@ const ModalCreateUser = (props) => {
     //valid email
     const isValidateEmail = validateEmail(email);
     if (!isValidateEmail) {
-      toast.error("Invalid email");
+      toast.error(t("creatUser.errorEmail"));
 
       return;
     }
     // valid Password
     if (!password) {
-      toast.error("Invalid password");
+      toast.error(t("creatUser.errorPassword"));
       return;
     }
 
@@ -118,12 +118,14 @@ const ModalCreateUser = (props) => {
         checkEmail(data, email);
         checkUsername(data, username);
         if (isExistEmail) {
-          toast.error(`Email ${email} is already exist!`);
+          toast.error(`Email ${email} t("createUser.exists")`);
           return;
         }
 
         if (isExistUsername) {
-          toast.error(`Username ${username} is already exist!`);
+          toast.error(
+            `t("createUser.username") ${username} t("createUser.exists")`
+          );
           return;
         }
         createParticipant(dataUser, () => {
@@ -149,12 +151,12 @@ const ModalCreateUser = (props) => {
         className="modal-add-user"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add new user</Modal.Title>
+          <Modal.Title>{t("manageUser.add")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form className="row g-3">
             <div className="col-md-6">
-              <label className="form-label">Email</label>
+              <label className="form-label">{t("tableUser.email")}</label>
               <input
                 type="email"
                 className="form-control"
@@ -163,7 +165,7 @@ const ModalCreateUser = (props) => {
               />
             </div>
             <div className="col-md-6">
-              <label className="form-label">Password</label>
+              <label className="form-label">{t("createUser.password")}</label>
               <input
                 type="password"
                 className="form-control"
@@ -174,7 +176,7 @@ const ModalCreateUser = (props) => {
             </div>
 
             <div className="col-md-6">
-              <label className="form-label">Username</label>
+              <label className="form-label">{t("tableUser.username")}</label>
               <input
                 type="text"
                 className="form-control"
@@ -183,22 +185,22 @@ const ModalCreateUser = (props) => {
               />
             </div>
             <div className="col-md-4">
-              <label className="form-label">Role</label>
+              <label className="form-label">{t("tableUser.role")}</label>
               <select
                 className="form-select"
                 onChange={(e) => setRole(e.target.value)}
               >
                 <option default value="USER">
-                  USER
+                  {t("createUser.user")}
                 </option>
-                <option value="ADMIN">ADMIN</option>
+                <option value="ADMIN">{t("createUser.admin")}</option>
               </select>
             </div>
 
             <div className="col-md-12">
               <label className="form-label label-upload" htmlFor="labelUpload">
                 <FcPlus />
-                Upload File Image
+                {t("createUser.uploadFile")}
               </label>
               <input
                 type="file"
@@ -212,17 +214,17 @@ const ModalCreateUser = (props) => {
               {previewImg ? (
                 <img src={previewImg} alt="" />
               ) : (
-                <span>Preview Image</span>
+                <span>{t("createUser.previewImage")}</span>
               )}
             </div>
           </form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            {t("button.close")}
           </Button>
           <Button variant="primary" onClick={() => handleSubmitCreateUser()}>
-            Save
+            {t("button.save")}
           </Button>
         </Modal.Footer>
       </Modal>

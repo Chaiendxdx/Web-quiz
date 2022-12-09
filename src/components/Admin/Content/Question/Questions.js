@@ -8,6 +8,7 @@ import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { RiImageAddFill } from "react-icons/ri";
 import _ from "lodash";
 import Lightbox from "react-awesome-lightbox";
+import { useTranslation } from "react-i18next";
 import NProgress from "nprogress";
 import { toast } from "react-toastify";
 import { useRef } from "react";
@@ -21,7 +22,7 @@ const Questions = (props) => {
   const [selectedQuiz, setSelectedQuiz] = useState({});
   const [isValid, setIsValid] = useState();
   const [image, setImage] = useState("");
-
+  const { t } = useTranslation();
   let indexImage = useRef(0);
   const initialQuestion = [
     {
@@ -260,7 +261,7 @@ const Questions = (props) => {
   const handleSubmitQuestionForQuiz = async () => {
     //validate data
     if (_.isEmpty(selectedQuiz)) {
-      toast.error("Please choose a Quiz!");
+      toast.error(t("question.error"));
       return;
     }
 
@@ -337,7 +338,7 @@ const Questions = (props) => {
     }
     let b = await postResultQuiz(+selectedQuiz.value, answers);
 
-    toast.success("Create questions and answers succed!");
+    toast.success(t("question.success"));
     setQuestions(initialQuestion);
 
     // post result
@@ -358,11 +359,11 @@ const Questions = (props) => {
   return (
     <>
       <div className="questions-container">
-        <div className="title">Manage Questions</div>
+        <div className="title">{t("question.title")}</div>
         <hr />
         <div className="add-new-questions">
           <div className="col-6 form-group">
-            <label className="mb-2">Select Quiz:</label>
+            <label className="mb-2">{t("quizQA.select")}</label>
             <Select
               value={selectedQuiz}
               onChange={setSelectedQuiz}
@@ -370,7 +371,7 @@ const Questions = (props) => {
             />
           </div>
 
-          <div className="mt-3 mb-2">Add questions:</div>
+          <div className="mt-3 mb-2">{t("question.add")}</div>
           {questions &&
             questions.length > 0 &&
             questions.map((question, index) => {
@@ -384,7 +385,7 @@ const Questions = (props) => {
                           question.isInValid ? "is-invalid" : ""
                         }`}
                         id="floatingInput"
-                        placeholder="Description"
+                        placeholder={t("question.Desc")}
                         value={question.description}
                         onChange={(e) =>
                           handleOnChange(
@@ -395,7 +396,7 @@ const Questions = (props) => {
                         }
                       />
                       <label htmlFor="floatingInput">
-                        Question {index + 1} 's description
+                        {t("question.q")} {index + 1} {t("question.desc")}
                       </label>
                     </div>
                     <div className="group-upload">
@@ -420,7 +421,7 @@ const Questions = (props) => {
                             {question.imageName}
                           </span>
                         ) : (
-                          "0 file is uploaded"
+                          t("question.0file")
                         )}
                       </span>
                     </div>
@@ -479,7 +480,7 @@ const Questions = (props) => {
                               }
                             />
                             <label htmlFor="floatingInput">
-                              Answer {index + 1}
+                              {t("answer.a")} {index + 1}
                             </label>
                           </div>
                           <div className="btn-group">
@@ -516,7 +517,7 @@ const Questions = (props) => {
                 className="btn btn-warning"
                 onClick={() => handleSubmitQuestionForQuiz()}
               >
-                Save Questions
+                {t("button.saveQ")}
               </button>
             </div>
           )}

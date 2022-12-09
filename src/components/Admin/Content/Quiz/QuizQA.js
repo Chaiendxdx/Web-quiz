@@ -8,6 +8,7 @@ import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { RiImageAddFill } from "react-icons/ri";
 import _ from "lodash";
 import Lightbox from "react-awesome-lightbox";
+import { useTranslation } from "react-i18next";
 import NProgress from "nprogress";
 import { toast } from "react-toastify";
 const quizApi = "http://localhost:4000/quiz";
@@ -20,6 +21,7 @@ let questionData = [];
 let answerData = [];
 const QuizQA = (props) => {
   const [selectedQuiz, setSelectedQuiz] = useState({});
+  const { t } = useTranslation();
   const [isValid, setIsValid] = useState();
   const [image, setImage] = useState("");
   const [result, setResult] = useState([]);
@@ -69,7 +71,7 @@ const QuizQA = (props) => {
     };
     fetchData();
   }, [selectedQuiz]);
-  console.log("result: ", result);
+  // console.log("result: ", result);
   const fetchQuiz = async () => {
     const options = {
       method: "GET",
@@ -421,7 +423,7 @@ const QuizQA = (props) => {
     }
 
     if (isValidQuestion === false) {
-      toast.error(`Not empty description for Question ${indexQ1 + 1}`);
+      toast.error(`${t("quizQA.errorQ")} ${indexQ1 + 1}`);
       setQuestions(initialQuestion);
       return;
     }
@@ -443,7 +445,11 @@ const QuizQA = (props) => {
       if (isValidAnswer === false) break;
     }
     if (isValidAnswer === false) {
-      toast.error(`Not empty Answer ${indexA + 1} at Question ${indexQ + 1}`);
+      toast.error(
+        `${t("quizQA.errorA1")} ${indexA + 1} ${t("quizQA.errorA2")} ${
+          indexQ + 1
+        }`
+      );
       setQuestions(initialQuestion);
       return;
     }
@@ -502,7 +508,7 @@ const QuizQA = (props) => {
       });
     }
     let b = await postResultQuiz(+selectedQuiz.value, answers);
-    toast.success("Update questions and answers succed!");
+    toast.success(t("quizQA.success"));
     setQuestions(initialQuestion);
     setSelectedQuiz({});
   };
@@ -522,7 +528,7 @@ const QuizQA = (props) => {
       <div className="questions-container">
         <div className="add-new-questions">
           <div className="col-6 form-group">
-            <label className="mb-2">Select Quiz:</label>
+            <label className="mb-2">{t("quizQA.select")}</label>
             <Select
               value={selectedQuiz}
               onChange={setSelectedQuiz}
@@ -530,7 +536,7 @@ const QuizQA = (props) => {
             />
           </div>
 
-          <div className="mt-3 mb-2">Add questions:</div>
+          <div className="mt-3 mb-2">{t("question.add")}</div>
           {questions &&
             questions.length > 0 &&
             questions.map((question, index) => {
@@ -544,8 +550,8 @@ const QuizQA = (props) => {
                           question.isInValid ? "is-invalid" : ""
                         }`}
                         id="floatingInput"
-                        placeholder="Description"
-                        value={question.description}
+                        placeholder={t("question.Desc")}
+                        value={question.Description}
                         onChange={(e) =>
                           handleOnChange(
                             "QUESTION",
@@ -555,7 +561,7 @@ const QuizQA = (props) => {
                         }
                       />
                       <label htmlFor="floatingInput">
-                        Question {index + 1} 's description
+                        {t("question.q")} {index + 1} {t("question.desc")}
                       </label>
                     </div>
                     <div className="group-upload">
@@ -579,7 +585,7 @@ const QuizQA = (props) => {
                             {question.imageName}
                           </span>
                         ) : (
-                          "0 file is uploaded"
+                          t("question.0file")
                         )}
                       </span>
                     </div>
@@ -638,7 +644,7 @@ const QuizQA = (props) => {
                               }
                             />
                             <label htmlFor="floatingInput">
-                              Answer {index + 1}
+                              {t("answer.a")} {index + 1}
                             </label>
                           </div>
                           <div className="btn-group">
@@ -675,7 +681,7 @@ const QuizQA = (props) => {
                 className="btn btn-warning"
                 onClick={() => handleSubmitQuestionForQuiz()}
               >
-                Save Questions
+                {t("button.saveQ")}
               </button>
             </div>
           )}

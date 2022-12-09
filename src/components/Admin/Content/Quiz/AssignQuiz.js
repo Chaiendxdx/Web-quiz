@@ -2,6 +2,7 @@ import Select from "react-select";
 import { useState, useEffect } from "react";
 import NProgress from "nprogress";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 const quizApi = "http://localhost:4000/quiz";
 const participantApi = "http://localhost:4000/participant";
 const quizAssignApi = "http://localhost:4000/quiz-assign-to-user";
@@ -11,6 +12,7 @@ const AssignQuiz = (props) => {
   const [listQuizAssign, setListQuizAssign] = useState();
   const [listUser, setListUser] = useState();
   const [selectedUser, setSelectedUser] = useState({});
+  const { t } = useTranslation();
   useEffect(() => {
     fetchQuiz();
     fetchUser();
@@ -110,16 +112,16 @@ const AssignQuiz = (props) => {
       }
     });
     if (isAssign) {
-      toast.error("The quiz already assigned to user");
+      toast.error(t("assignQuiz.errorAssign"));
       return;
     }
-    toast.success("Assign the quiz to the current user succeed!");
+    toast.success(t("assignQuiz.successAssign"));
     await postAssignQuiz(dataAssignQuiz);
   };
   return (
     <div className="assgin-quiz-container row">
       <div className="col-6 form-group">
-        <label className="mb-2">Select Quiz:</label>
+        <label className="mb-2">{t("quizQA.select")}</label>
         <Select
           value={selectedQuiz}
           onChange={setSelectedQuiz}
@@ -127,7 +129,7 @@ const AssignQuiz = (props) => {
         />
       </div>
       <div className="col-6 form-group">
-        <label className="mb-2">Select User:</label>
+        <label className="mb-2">{t("manageUser.select")}</label>
         <Select
           value={selectedUser}
           onChange={setSelectedUser}
@@ -136,7 +138,7 @@ const AssignQuiz = (props) => {
       </div>
       <div>
         <button className="btn btn-warning mt-3" onClick={() => handleAssign()}>
-          Assign
+          {t("button.assign")}
         </button>
       </div>
     </div>

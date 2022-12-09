@@ -6,9 +6,11 @@ import _ from "lodash";
 import NProgress from "nprogress";
 import Button from "react-bootstrap/Button";
 import { update } from "../../redux/action/userAction";
+import { useTranslation } from "react-i18next";
 const participantApi = "http://localhost:4000/participant";
 const UserInfo = (props) => {
   const { account } = props;
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   // const [dataUsers, setDataUsers] = useState();
   let dataUsers = {};
@@ -53,9 +55,9 @@ const UserInfo = (props) => {
     // setDataUsers(data);
     dataUsers = { ...data };
     if (res.status === 200) {
-      toast.success("Update account succeed!");
+      toast.success(t("updateUser.successUpdate"));
     } else {
-      toast.error("Fail to update account!");
+      toast.error(t("updateUser.errorUpdate"));
     }
   };
   function encodeImageFileAsURL(element) {
@@ -92,7 +94,7 @@ const UserInfo = (props) => {
         </div>
 
         <div className="col-md-6">
-          <label className="form-label">Username</label>
+          <label className="form-label">{t("createUser.username")}</label>
           <input
             type="text"
             className="form-control"
@@ -101,22 +103,22 @@ const UserInfo = (props) => {
           />
         </div>
         <div className="col-md-4">
-          <label className="form-label">Role</label>
+          <label className="form-label">{t("createUser.role")}</label>
           <select
             className="form-select"
             onChange={(e) => setRole(e.target.value)}
             value={role}
             disabled
           >
-            <option value="USER">USER</option>
-            <option value="ADMIN">ADMIN</option>
+            <option value="USER">{t("createUser.user")}</option>
+            <option value="ADMIN">{t("createUser.admin")}</option>
           </select>
         </div>
 
         <div className="col-md-12">
           <label className="form-label label-upload" htmlFor="labelUpload">
             <FcPlus />
-            Upload File Image
+            {t("createUser.uploadFile")}
           </label>
           <input
             type="file"
@@ -130,7 +132,7 @@ const UserInfo = (props) => {
           {previewImg ? (
             <img src={previewImg} alt="" />
           ) : (
-            <span>Preview Image</span>
+            <span>{t("createUser.previewImage")}</span>
           )}
         </div>
       </form>
@@ -138,7 +140,7 @@ const UserInfo = (props) => {
         variant="warning"
         onClick={() => handleUpdateUser(dataUser, account.id)}
       >
-        Update
+        {t("button.update")}
       </Button>
     </>
   );

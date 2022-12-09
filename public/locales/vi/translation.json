@@ -32,6 +32,191 @@
             "showAnswer": "Hiện đáp án:",
             "close": "Đóng",
             "question": "Câu hỏi"
+        },
+        "sidebar": {
+          "main": "Chính",
+          "dashboard": "Thanh điều khiển",
+          "features": "Chức năng",
+          "manageUser": "Quản lý người dùng",
+          "manageQuiz" : "Quản lý bài quiz",
+          "manageQuestion": "Quản lý câu hỏi"
+        },
+        "dashboard": {
+          "title": "Biểu đồ phân tích",
+          "totalUser": "Tổng người dùng",
+          "totalQuiz": "Tổng bài quiz",
+          "totalQuestion": "Tổng câu hỏi",
+          "totalAnswer": "Tổng lượt trả lời"
+        },
+        "manageUser": {
+          "title" : "Quản lý người dùng",
+          "add": "Thêm người dùng mới",
+          "view": "Xem người dùng",
+          "update": "Cập nhật người dùng",
+          "delete": "Xoá người dùng?",
+          "select" : "Chọn người dùng"
+        },
+        "tableUser": {
+          "username": "Tên người dùng",
+          
+          "email": "Email",
+          "role": "Vai trò",
+          "action": "Thao tác",
+          "view": "Xem",
+          "update": "Cập nhật",
+          "delete": "Xoá",
+          "prev": "Lùi",
+          "next": "Tiến"
+        },
+        "createUser": {
+          "successCreate": "Tạo tài khoản mới thành công!",
+          "errorCreate": "Tạo tài khoản thất bại!",
+          "errorEmail": "Email không hợp lệ",
+          "errorPassword": "Vui lòng nhập mật khẩu",
+          "username": "Tên người dùng",
+          "exists": "đã tồn tại!",
+          "password": "Mật khẩu",
+          "role": "Vai trò",
+          "user": "Người dùng",
+          "admin": "Quản trị viên",
+          "uploadFile": "Tải ảnh",
+          "previewImage": "Xem trước ảnh"
+        },
+        "updateUser": {
+          "successUpdate": "Cập nhật tài khoản thành công!",
+          "errorUpdate": "Cập nhật tài khoản thất bại!"
+        },
+        "deleteUser": {
+          "successDelete": "Xoá tài khoản thành công!",
+          "errorDelete": "Xoá tài khoản thất bại!",
+          "confirm": "Bạn có muốn xoá người dùng này không? Email:"
+        },
+        "button": {
+          "close": "Đóng",
+          "save": "Lưu",
+          "no": "Không",
+          "yes": "Có",
+          "saveQ": "Lưu câu hỏi",
+          "edit": "Sửa",
+          "del": "Xoá",
+          "prev": "Lùi",
+          "next": "Tiến",
+          "assign": "Gán",
+          "signup": "Đăng ký",
+          "update": "Cập nhật"
+        },
+        "quiz": {
+          "successCreate": "Tạo bài quiz mới thành công!",
+          "errorCreate": "Tạo bài quiz mới thất bại!",
+          "errorRequire": "Tên/Mô tả là bắt buộc",
+          "errorDifficulty": "Vui lòng chọn độ khó!",
+          "title": "Quản lý Quiz",
+          "add": "Thêm 1 quiz mới",
+          "newQuiz": "Quiz mới:",
+          "listQuiz" : "Danh sách Quiz:",
+          "name": "Tên",
+          "placeholderName": "Tên bài quiz của bạn",
+          "placeholderDesc": "Mô tả",
+          "placeholderType": "Độ khó Quiz...",
+          "desc": "Mô tả",
+          "upload": "Tải ảnh",
+          "uploadfile": "Tải File ảnh",
+          "preview": "Xem trước ảnh",
+          "difficulty": "Độ khó",
+          "easy": "Dễ",
+          "medium": "Trung bình",
+          "hard": "Khó",
+          "type":"Loại",
+          "action":"Thao tác",
+          "updateQA": "Cập nhật câu hỏi/câu trả lời của Quiz",
+          "quizAssign": "Gán bài quiz cho người dùng",
+          "doQuiz": "Làm bài Quiz"
+        },
+        "editQuiz": {
+          "successUpdate": "Cập nhật bài quiz thành công!",
+          "errorUpdate": "Cập nhật bài quiz thất bại!",
+          "title": "Cập nhật bài quiz"
+        },
+        "delQuiz" : {
+          "successDelete": "Xoá bài quiz thành công!",
+          "errorDelete": "Xoá bài quiz thất bại!",
+          "title": "Xoá bài quiz này?",
+          "confirm": "Bạn có chắc là muốn xoá bài quiz này không? ID:"
+
+        },
+        "quizQA": {
+          "errorQ": "Không để trống mô tả cho câu hỏi",
+          "errorA1": "Không để trống câu trả lời",
+          "errorA2": "ở câu hỏi",
+          "success": "Cập nhật câu hỏi và câu trả lời thành công!",
+          "select": "Chọn bài Quiz: "
+        },
+        "assignQuiz": {
+          "errorAssign": "Bài quiz này đã được gán cho người dùng này rồi",
+          "successAsign": "Bài quiz gán cho người dùng thành công!"
+        },
+        "question": {
+          "add": "Thêm câu hỏi:",
+          "Desc": "Mô tả",
+          "q": "Câu hỏi",
+          "desc": "'s description",
+          "0file": "Chưa file nào được tải",
+          "error": "Vui lòng chọn bài Quiz",
+          "success": "Tạo câu hỏi và câu trả lời thành công!",
+          "title": "Quản lý câu hỏi"
+          
+        },
+        "answer": {
+          "a": "Câu trả lời"
+        },
+        "history": {
+          "quizName": "Tên bài Quiz",
+          "totalQ": "Tổng câu hỏi",
+          "totalC": "Tổng đáp án đúng",
+          "mark": "Điểm"
+        },
+        "login": {
+          "success": "Đăng nhập thành công!",
+          "error": "Email hoặc mật khẩu không đúng",
+          "header": "Bạn đã có tài khoản chưa?",
+          "signup": "Đăng ký",
+          "title": "Xin chào, bạn là ai?",
+          "password": "Mật khẩu",
+          "forgetPassword": "Quên mật khẩu?",
+          "doLogin": "Đăng nhập",
+          "homepage": "Chuyển về trang chủ"
+        },
+        "signup" : {
+          "success": "Tạo tài khoản thành công!",
+          "error": "Tạo tài khoản thất bại!",
+          "errorEmail": "Email không hợp lệ",
+          "errorPassword": "Mật khẩu không hợp lệ",
+          "email": "Email",
+          "username": "Tên người dùng",
+          "isExist": "đã tồn tại!",
+          "header": "Đã có tài khoản?",
+          "login": "Đăng nhập",
+          "title": "Chào mừng đến với Quiz Web",
+          "desc": "Vui lòng tạo mới tài khoản để đăng nhập!"
+        },
+        "password": {
+          "success": "Thay đổi mật khẩu thành công! Vui lòng đăng nhập lại",
+          "error1": "Thay đổi mật khẩu thất bại!",
+          "error2": "Mật khẩu không đúng. Vui lòng thử lại!",
+          "error3": "Mật khẩu không trùng khớp. Vui lòng thử lại",
+          "title1": "Mật khẩu hiện tại",
+          "title2": "Mật khẩu mới",
+          "title3": "Xác nhận mật khẩu"
+        },
+        "profile" : {
+          "title": "Thông tin",
+          "mainInfo": "Thông tin người dùng",
+          "password": "Thay đổi mật khẩu",
+          "history": "Lịch sử làm bài"
+        },
+        "userInfo" : {
+          "success": ""
         }
+
       
 }

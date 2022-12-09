@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { memo } from "react";
 import NProgress from "nprogress";
 import ReactPaginate from "react-paginate";
+import { useTranslation } from "react-i18next";
 const quizApi = "http://localhost:4000/quiz";
 const TableQuiz = (props) => {
   const { listQuiz, quizPerPage, handleClickBtnEdit, handleDeleteQuiz } = props;
@@ -10,6 +11,7 @@ const TableQuiz = (props) => {
   const [pageCount, setPageCount] = useState(0);
   const start = pagesVisited;
   const end = pagesVisited + quizPerPage;
+  const { t } = useTranslation();
   const [currentListQuiz, setcurrentListQuiz] = useState(
     listQuiz.slice(start, end)
   );
@@ -48,13 +50,13 @@ const TableQuiz = (props) => {
             className="btn btn-warning"
             onClick={() => handleClickBtnEdit(item)}
           >
-            Edit
+            {t("button.edit")}
           </button>
           <button
             className="btn btn-danger"
             onClick={() => handleDeleteQuiz(item)}
           >
-            Delete
+            {t("button.del")}
           </button>
         </td>
       </tr>
@@ -88,23 +90,23 @@ const TableQuiz = (props) => {
   // };
   return (
     <>
-      <div>List Quiz: </div>
+      <div>{t("quiz.listQuiz")}</div>
       <table className="table table-hover table-bordered my-2">
         <thead>
           <tr>
             <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Type</th>
-            <th scope="col">Actions</th>
+            <th scope="col">{t("quiz.name")}</th>
+            <th scope="col">{t("quiz.desc")}</th>
+            <th scope="col">{t("quiz.type")}</th>
+            <th scope="col">{t("quiz.action")}</th>
           </tr>
         </thead>
         <tbody>{displayQuiz}</tbody>
       </table>
       <div className="page-paginate d-flex justify-content-center">
         <ReactPaginate
-          previousLabel={"< Previous"}
-          nextLabel={"Next >"}
+          previousLabel={`< ${t("button.prev")}`}
+          nextLabel={`${t("button.next")} >`}
           pageCount={pageCount}
           onPageChange={changePage}
           pageRangeDisplayed={5}

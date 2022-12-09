@@ -3,13 +3,14 @@ import { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
-
+import { useTranslation } from "react-i18next";
 const quizApi = "http://localhost:4000/quiz";
 
 const ModalDeleteQuiz = (props) => {
   const { show, setShow, deleteQuiz, listQuiz, setListQuiz } = props;
   const handleClose = () => setShow(false);
   //   const handleShow = () => setShow(true);
+  const { t } = useTranslation();
   const handleDeleteQuiz = (id, callback) => {
     const options = {
       method: "Delete",
@@ -22,9 +23,9 @@ const ModalDeleteQuiz = (props) => {
     fetch(quizApi + "/" + id, options)
       .then((response) => {
         if (response.status === 200) {
-          toast.success("Delete quiz succeed!");
+          toast.success(t("delQuiz.successDelete"));
         } else {
-          toast.error("Fail to delete quiz!");
+          toast.error(t("delQuiz.errorDelete"));
         }
         response.json();
       })
@@ -41,18 +42,18 @@ const ModalDeleteQuiz = (props) => {
     <>
       <Modal show={show} onHide={handleClose} backdrop="static">
         <Modal.Header closeButton>
-          <Modal.Title>Delete the quiz?</Modal.Title>
+          <Modal.Title>{t("delQuiz.title")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure to delete this quiz? ID:
+          {t("delQuiz.confirm")}
           <b>{deleteQuiz && deleteQuiz.id ? deleteQuiz.id : ""}</b>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            No
+            {t("button.no")}
           </Button>
           <Button variant="primary" onClick={handleSubmitDeleteUser}>
-            Yes
+            {t("button.yes")}
           </Button>
         </Modal.Footer>
       </Modal>

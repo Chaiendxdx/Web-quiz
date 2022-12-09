@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import "./Profile.scss";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import History from "./History";
 const markApi = "http://localhost:4000/total-mark";
 let dataResult = [];
@@ -14,6 +15,7 @@ const Profile = (props) => {
   const { show, handleClose } = props;
   const [listResult, setListResult] = useState(dataResult);
   let account = useSelector((state) => state.user.account);
+  const { t } = useTranslation();
   useEffect(() => {
     fetchResult();
   }, []);
@@ -33,7 +35,7 @@ const Profile = (props) => {
         className="modal-add-user"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Profile</Modal.Title>
+          <Modal.Title>{t("profile.title")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Tabs
@@ -41,13 +43,13 @@ const Profile = (props) => {
             id="uncontrolled-tab-example"
             className="mb-3"
           >
-            <Tab eventKey="home" title="Main Info">
+            <Tab eventKey="home" title={t("profile.mainInfo")}>
               <UserInfo account={account} />
             </Tab>
-            <Tab eventKey="profile" title="Password">
+            <Tab eventKey="profile" title={t("profile.password")}>
               <Password account={account} />
             </Tab>
-            <Tab eventKey="history" title="History">
+            <Tab eventKey="history" title={t("profile.history")}>
               <History listResult={listResult} quizPerPage={8} />
             </Tab>
           </Tabs>

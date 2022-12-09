@@ -9,6 +9,7 @@ const RightContent = (props) => {
     handleFinish,
     index,
     setIndex,
+    isFinish,
   } = props;
   const refDiv = useRef([]);
 
@@ -47,8 +48,9 @@ const RightContent = (props) => {
   return (
     <>
       <div className="main-timer">
-        <Countdown onTimeUp={onTimeUp} />
+        {isFinish ? <></> : <Countdown onTimeUp={onTimeUp} />}
       </div>
+
       <div className="main-question">
         {dataQuestion &&
           dataQuestion.length > 0 &&

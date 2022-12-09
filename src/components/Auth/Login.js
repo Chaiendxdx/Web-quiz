@@ -8,6 +8,7 @@ import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import { useDispatch } from "react-redux";
 import { doLogin } from "../../redux/action/userAction";
 import { ImSpinner9 } from "react-icons/im";
+import { useTranslation } from "react-i18next";
 import NProgress from "nprogress";
 import Language from "../Header/Language";
 const loginApi = "http://localhost:4000/login";
@@ -18,6 +19,7 @@ const Login = (props) => {
   const [password, setPassword] = useState("");
   const [dataUsers, setDataUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useTranslation();
   let isSuccedLogin = useRef(false);
   let data = {
     email: email,
@@ -92,7 +94,7 @@ const Login = (props) => {
     if (isSuccedLogin.current) {
       postLoginData(data, () => {
         dispatch(doLogin(dataLogin));
-        toast.success("Login is success!");
+        toast.success(t("login.success"));
         setIsLoading(false);
         navigate("/");
       });
@@ -100,7 +102,7 @@ const Login = (props) => {
       localStorage.setItem("id", JSON.stringify(dataLogin.id));
       deleteLoginData(() => {});
     } else {
-      toast.error("Email or password is incorrect!");
+      toast.error(t("login.error"));
       setIsLoading(false);
     }
   };
@@ -114,21 +116,21 @@ const Login = (props) => {
   return (
     <div className="login-container">
       <div className="header">
-        <span>Don't have an account yet?</span>
+        <span>{t("login.header")}</span>
         <button
           className="btn btn-signup"
           onClick={() => {
             navigate("../signup");
           }}
         >
-          Sign up
+          {t("login.signup")}
         </button>
         <Language />
       </div>
 
       <div className="title col-4 mx-auto">Quiz Web</div>
 
-      <div className="welcome col-4 mx-auto">Hello, who's this?</div>
+      <div className="welcome col-4 mx-auto">{t("login.title")}</div>
       <div className="content-form col-4 mx-auto">
         <div className="form-group ">
           <label>Email</label>
@@ -143,7 +145,7 @@ const Login = (props) => {
         </div>
 
         <div className="form-group ">
-          <label>Password</label>
+          <label>{t("login.password")}</label>
           <input
             type={!isVisible ? "password" : "text"}
             className={"form-control"}
@@ -157,7 +159,7 @@ const Login = (props) => {
           </span>
         </div>
         <a href="/" className="forget-password">
-          Forgot password?
+          {t("login.forgetPassword")}
         </a>
         <div>
           <button
@@ -166,7 +168,7 @@ const Login = (props) => {
             onClick={() => handleLogin()}
           >
             {isLoading === true && <ImSpinner9 className="loader-icon" />}
-            <span>Login to quiz web</span>
+            <span>{t("login.doLogin")}</span>
           </button>
         </div>
 
@@ -176,7 +178,7 @@ const Login = (props) => {
               navigate("/");
             }}
           >
-            &#60;&#60; Go to HomePage
+            &#60;&#60; {t("login.homepage")}
           </span>
         </div>
       </div>

@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 import Language from "../Header/Language";
-
+import { useTranslation } from "react-i18next";
 const participantApi = "http://localhost:4000/participant";
 const Signup = (props) => {
   const [email, setEmail] = useState("");
@@ -19,6 +19,7 @@ const Signup = (props) => {
   let isSuccessSignup = useRef(false);
   let isExistEmail = false;
   let isExistUsername = false;
+  const { t } = useTranslation();
   const navigate = useNavigate();
   let dataUser = {
     email,
@@ -67,9 +68,9 @@ const Signup = (props) => {
     fetch(participantApi, options)
       .then((response) => {
         if (response.status === 201) {
-          toast.success("A new user create is success!");
+          toast.success(t("signup.success"));
         } else {
-          toast.error("Fail to sign in!");
+          toast.error(t("signup.error"));
         }
         response.json();
       })
@@ -87,13 +88,13 @@ const Signup = (props) => {
     //valid email
     const isValidateEmail = validateEmail(email);
     if (!isValidateEmail) {
-      toast.error("Invalid email");
+      toast.error(t("signup.errorEmail"));
 
       return;
     }
     // valid Password
     if (!password) {
-      toast.error("Invalid password");
+      toast.error(t("signup.errorPassword"));
       return;
     }
 
@@ -104,12 +105,14 @@ const Signup = (props) => {
         checkEmail(data, email);
         checkUsername(data, username);
         if (isExistEmail) {
-          toast.error(`Email ${email} is already exist!`);
+          toast.error(`${t("signup.email")} ${email} ${t("signup.isExist")}`);
           return;
         }
 
         if (isExistUsername) {
-          toast.error(`Username ${username} is already exist!`);
+          toast.error(
+            `${t("signup.username")} ${username} ${t("signup.isExist")}`
+          );
           return;
         }
         createParticipant(dataUser, () => {
@@ -127,14 +130,14 @@ const Signup = (props) => {
   return (
     <div className="login-container">
       <div className="header">
-        <span>Already have an account?</span>
+        <span>{t("signup.header")}</span>
         <button
           className="btn btn-signup"
           onClick={() => {
             navigate("../login");
           }}
         >
-          Log in
+          {t("signup.login")}
         </button>
         <Language />
       </div>
@@ -142,8 +145,8 @@ const Signup = (props) => {
       <div className="title col-4 mx-auto">Quiz Web</div>
 
       <div className="welcome col-4 mx-auto">
-        <span>Welcome to quiz web</span>
-        <br /> Please create new account to login!
+        <span>{t("signup.title")}</span>
+        <br /> {t("signup.desc")}
       </div>
       <div className="content-form col-4 mx-auto">
         <div className="form-group ">
@@ -160,7 +163,7 @@ const Signup = (props) => {
         </div>
 
         <div className="form-group ">
-          <label>Password</label>
+          <label>{t("login.password")}</label>
           <input
             type={!isVisible ? "password" : "text"}
             className={"form-control"}
@@ -174,7 +177,7 @@ const Signup = (props) => {
         </div>
 
         <div className="form-group ">
-          <label>Username</label>
+          <label>{t("signup.username")}</label>
           <input
             type={"text"}
             className={"form-control"}
@@ -187,7 +190,7 @@ const Signup = (props) => {
 
         <div>
           <button className="btn btn-submit" onClick={handleSignup}>
-            Sign up
+            {t("button.signup")}
           </button>
         </div>
 
@@ -197,7 +200,7 @@ const Signup = (props) => {
               navigate("/");
             }}
           >
-            &#60;&#60; Go to HomePage
+            &#60;&#60; {t("login.homepage")}
           </span>
         </div>
       </div>

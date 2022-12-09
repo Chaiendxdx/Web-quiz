@@ -11,13 +11,14 @@ import {
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { FaGem } from "react-icons/fa";
-
+import { useTranslation, Trans } from "react-i18next";
 import sidebarBg from "../../assets/bg1.jpg";
 import { SiReactivex } from "react-icons/si";
 import { MdDashboard } from "react-icons/md";
 
 const SideBar = (props) => {
   const { image, collapsed, toggled, handleToggleSidebar } = props;
+  const { t } = useTranslation();
   return (
     <>
       <ProSidebar
@@ -55,24 +56,24 @@ const SideBar = (props) => {
           <Menu iconShape="circle">
             <MenuItem
               icon={<MdDashboard />}
-              suffix={<span className="badge red">Main</span>}
+              suffix={<span className="badge red">{t("sidebar.main")}</span>}
             >
-              Dashboard
+              {t("sidebar.dashboard")}
               <Link to="/admins" />
             </MenuItem>
           </Menu>
           <Menu iconShape="circle">
-            <SubMenu icon={<FaGem />} title="Features">
+            <SubMenu icon={<FaGem />} title={t("sidebar.features")}>
               <MenuItem>
-                Manage Users
+                {t("sidebar.manageUser")}
                 <Link to="/admins/manage-users" />
               </MenuItem>
               <MenuItem>
-                Manage Quiz
+                {t("sidebar.manageQuiz")}
                 <Link to="/admins/manage-quizzes" />
               </MenuItem>
               <MenuItem>
-                Manage Question
+                {t("sidebar.manageQuestion")}
                 <Link to="/admins/manage-questions" />
               </MenuItem>
             </SubMenu>

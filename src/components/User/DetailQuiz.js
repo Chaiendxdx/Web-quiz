@@ -256,7 +256,7 @@ const DetailQuiz = (props) => {
         <NavLink to="/users" className="breadcrumb-item">
           Users
         </NavLink>
-        <Breadcrumb.Item active>Do Quiz</Breadcrumb.Item>
+        <Breadcrumb.Item active>{t("quiz.doQuiz")}</Breadcrumb.Item>
       </Breadcrumb>
       <div className="detail-quiz-container">
         <div className="left-content">
@@ -323,6 +323,7 @@ const DetailQuiz = (props) => {
             handleFinish={handleFinish}
             index={index}
             setIndex={setIndex}
+            isFinish={isFinish}
           />
         </div>
 

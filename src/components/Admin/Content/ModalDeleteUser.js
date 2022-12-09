@@ -3,13 +3,14 @@ import { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { toast } from "react-toastify";
-
+import { useTranslation } from "react-i18next";
 const participantApi = "http://localhost:4000/participant";
 
 const ModalDeleteUser = (props) => {
   const { show, setShow, deleteUser, listUsers, setListUsers } = props;
   const handleClose = () => setShow(false);
   //   const handleShow = () => setShow(true);
+  const { t } = useTranslation();
   const handleDeleteUser = (id, callback) => {
     const options = {
       method: "Delete",
@@ -22,9 +23,9 @@ const ModalDeleteUser = (props) => {
     fetch(participantApi + "/" + id, options)
       .then((response) => {
         if (response.status === 200) {
-          toast.success("Delete account succeed!");
+          toast.success(t("deleteUser.successDelete"));
         } else {
-          toast.error("Fail to delete account!");
+          toast.error(t("deleteUser.errorDelete"));
         }
         response.json();
       })
@@ -41,18 +42,18 @@ const ModalDeleteUser = (props) => {
     <>
       <Modal show={show} onHide={handleClose} backdrop="static">
         <Modal.Header closeButton>
-          <Modal.Title>Delete the user?</Modal.Title>
+          <Modal.Title>{t("manageUser.delete")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure to delete this user? Email:
+          {t("deleteUser.confirm")}
           <b>{deleteUser && deleteUser.email ? deleteUser.email : ""}</b>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            No
+            {t("button.no")}
           </Button>
           <Button variant="primary" onClick={handleSubmitDeleteUser}>
-            Yes
+            {t("button.yes")}
           </Button>
         </Modal.Footer>
       </Modal>

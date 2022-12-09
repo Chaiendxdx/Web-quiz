@@ -3,12 +3,13 @@ import { memo } from "react";
 import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import NProgress from "nprogress";
+import { useTranslation } from "react-i18next";
 const participantApi = "http://localhost:4000/participant";
 const markApi = "http://localhost:4000/total-mark";
 
 const History = (props) => {
   const { listResult, quizPerPage } = props;
-
+  const { t } = useTranslation();
   const [pageNumber, setPageNumber] = useState(0);
   const pagesVisited = pageNumber * quizPerPage;
   const [pageCount, setPageCount] = useState(0);
@@ -106,10 +107,10 @@ const History = (props) => {
         <thead>
           <tr>
             <th scope="col">ID</th>
-            <th scope="col">Quiz Name</th>
-            <th scope="col">Total Question</th>
-            <th scope="col">Total Correct</th>
-            <th scope="col">Mark</th>
+            <th scope="col">{t("history.quizName")}</th>
+            <th scope="col">{t("history.totalQ")}</th>
+            <th scope="col">{t("history.totalC")}</th>
+            <th scope="col">{t("history.mark")}</th>
           </tr>
         </thead>
         <tbody>{displayResult}</tbody>
@@ -117,8 +118,8 @@ const History = (props) => {
       {/* {console.log(pageNumber)} */}
       <div className="page-paginate d-flex justify-content-center">
         <ReactPaginate
-          previousLabel={"< Previous"}
-          nextLabel={"Next >"}
+          previousLabel={`< ${t("button.prev")}`}
+          nextLabel={`${t("button.next")} >`}
           pageCount={pageCount}
           onPageChange={changePage}
           pageRangeDisplayed={5}

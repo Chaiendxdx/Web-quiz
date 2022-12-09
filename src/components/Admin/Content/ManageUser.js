@@ -7,6 +7,7 @@ import ModalUpdateUser from "./ModalUpdateUser";
 import ModalViewUser from "./ModalViewUser";
 import ModalDeleteUser from "./ModalDeleteUser";
 import TableUserPaginate from "./TableUserPaginate";
+import { useTranslation } from "react-i18next";
 const participantApi = "http://localhost:4000/participant";
 let dataUser = [];
 
@@ -20,6 +21,7 @@ const ManageUser = (props) => {
   const [listUsers, setListUsers] = useState(dataUser);
   const [idUser, setIdUser] = useState();
   const [deleteUser, setDeleteUser] = useState({});
+  const { t } = useTranslation();
   let numberUser = dataUser.length;
   const fetchDataUser = () => {
     fetch(participantApi)
@@ -52,14 +54,14 @@ const ManageUser = (props) => {
   }, []);
   return (
     <div className="manage-user-container">
-      <div className="title">Manage User</div>
+      <div className="title">{t("manageUser.title")}</div>
       <div className="users-content">
         <div className="btn-add-new">
           <button
             className="btn btn-primary"
             onClick={() => setShowModalCreateUser(true)}
           >
-            <FcPlus /> Add new users
+            <FcPlus /> {t("manageUser.add")}
           </button>
         </div>
 
