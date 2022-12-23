@@ -24,11 +24,6 @@ const Admin = (props) => {
 
           <div className="rightside">
             <Language />
-            <NavDropdown title="Settings" id="basic-nav-dropdown">
-              <NavDropdown.Item>English</NavDropdown.Item>
-
-              <NavDropdown.Item>Tiếng Việt</NavDropdown.Item>
-            </NavDropdown>
           </div>
         </div>
         <div className="admin-main">
