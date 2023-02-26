@@ -56,7 +56,7 @@ const Header = () => {
       clearTimeout(timeId);
     };
   }, []);
-  console.log("account: ", account);
+
   return (
     <>
       <Navbar bg="light" expand="lg">

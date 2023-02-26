@@ -18,7 +18,7 @@ const markApi = "http://localhost:4000/total-mark";
 let listQuestion = [];
 let listAnswer = [];
 let name = "";
-let countCorrect = 0;
+
 const DetailQuiz = (props) => {
   const params = useParams();
   const quizId = params.id;
@@ -34,6 +34,7 @@ const DetailQuiz = (props) => {
   const [showModalResult, setShowModalResult] = useState(false);
   const [index, setIndex] = useState(0);
   const [dataModalResult, setDataModalResult] = useState({});
+  let countCorrect = 0;
   useEffect(() => {
     const fetchQuestion = async () => {
       NProgress.start();
@@ -55,6 +56,7 @@ const DetailQuiz = (props) => {
       const res = await fetch(resultApi);
       const data = await res.json();
       NProgress.done();
+
       setResult(data);
     };
     const fetchQuiz = async (id) => {
@@ -124,7 +126,7 @@ const DetailQuiz = (props) => {
       setDataModalResult({
         countCorrect,
         countQuestion,
-        countTotal: Math.ceil((countCorrect / listQuestion.length) * 10),
+        countTotal: (countCorrect / listQuestion.length).toFixed(2) * 10,
       });
       setShowModalResult(true);
     }
@@ -209,12 +211,11 @@ const DetailQuiz = (props) => {
       payload.answers = answers;
       // console.log("final payload: ", payload);
       await postSubmitQuiz({ ...payload });
-      console.log("correct: ", countCorrect);
-      console.log("question: ", countQuestion);
+
       await postMark(
         +quizId,
         +localStorage.getItem("id"),
-        Math.ceil((countCorrect / listQuestion.length) * 10),
+        (countCorrect / listQuestion.length).toFixed(2) * 10,
         countQuestion,
         countCorrect,
         quizName

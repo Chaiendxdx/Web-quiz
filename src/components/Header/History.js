@@ -13,6 +13,7 @@ const History = (props) => {
   const [pageNumber, setPageNumber] = useState(0);
   const pagesVisited = pageNumber * quizPerPage;
   const [pageCount, setPageCount] = useState(0);
+  const id = localStorage.getItem("id");
   const start = pagesVisited;
   const end = pagesVisited + quizPerPage;
   //   const [currentListUsers, setcurrentListUsers] = useState(
@@ -33,12 +34,16 @@ const History = (props) => {
       markApi + "?_start=" + start + "&_limit=" + quizPerPage
     );
     const data = await res.json();
-
-    if (data.length === 0) {
+    const dataUser = data.filter((user) => {
+      return user.userId === Number(id);
+    });
+    console.log(dataUser);
+    console.log("userId", id);
+    if (dataUser.length === 0) {
       setPageCount(pageCount - 1);
       setPageNumber(pageNumber - 1);
     } else {
-      setcurrentListResult(data);
+      setcurrentListResult(dataUser);
       listResult.length !== 0 &&
         setPageCount(Math.ceil(listResult.length / quizPerPage));
     }
